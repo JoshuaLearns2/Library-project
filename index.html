@@ -9,19 +9,47 @@
   <script src="script.js" defer></script>
 
 </head>
-<body>
-  <div class="container">
-    <div class="form-heading">
-      <h1>Add New Book to Library</h1>
-    </div>
-    <div class="books-heading">
-      <h1>Current Books in Library</h1>
-    </div>
-    <div class="form">
-    </div>
-    <div class="books"></div>
-  </div>
 
+<body>
+
+  <div class="container">
+
+    <div class="form-heading">
+
+      <button id="myBtn">ADD NEW BOOK</button>
+
+      <div id="myModal" class="modal">
+
+        <div class="modal-content">
+
+          <span class="close">&times;</span>
+          Title: <input class="book-input" type="text">
+          Author: <input class="book-input" type="text">
+          Pages: <input class="book-input" type="text">
+
+          <button id="addBookBtn">Submit</button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="books-heading">
+
+      <h1>Current Books in Library</h1>
+
+    </div>
+
+    <div class="form">
+
+    </div>
+
+    <div class="books">
+
+    </div>
+
+  </div>
   
 </body>
 </html>

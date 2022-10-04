@@ -1,3 +1,34 @@
+// TESTING 
+const myBtn = document.querySelector('#myBtn');
+myBtn.addEventListener('click', addBookToLibrary);
+
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on the button, open the modal
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+
 let myLibrary = [];
 
 function Book(Title, Author, Pages, Read) {
@@ -5,13 +36,7 @@ function Book(Title, Author, Pages, Read) {
   this.Author = Author;
   this.Pages = Pages;
   this.Read = Read;
-  // this.info = function() {
-      // return title + ' ' + 'by' + ' ' + author + ',' + ' ' + pages + ' ' + 'pages' + ',' + ' ' + read
-  // }
 }
-
-// const book1 = new Book('The Hobbit', 'J.R.R. Tolkien', '295', 'no');
-// console.log(book1.info());
 
 function addBookToLibrary(Title, Author, Pages, Read) {
   let newBook = new Book(Title, Author, Pages, Read);
@@ -34,9 +59,9 @@ function displayBooksOnPage() {
   })
 }
 
-addBookToLibrary("The Hobbit", "J.R.R. Tolkien", "225", "No")
-addBookToLibrary("The Hobbit", "J.R.R. Tolkien", "225", "No")
-addBookToLibrary("The Hobbit", "J.R.R. Tolkien", "225", "No")
-addBookToLibrary("The Hobbit", "J.R.R. Tolkien", "225", "No")
+addBookToLibrary("Test", "Test", "225")
+addBookToLibrary("The Hobbit", "J.R.R. Tolkien", "225")
+addBookToLibrary("The Hobbit", "J.R.R. Tolkien", "225")
+addBookToLibrary("The Hobbit", "J.R.R. Tolkien", "225")
 
 displayBooksOnPage();
