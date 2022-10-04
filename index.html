@@ -16,18 +16,21 @@
 
     <div class="form-heading">
 
-      <button id="myBtn">ADD NEW BOOK</button>
+      <button data-modal-target="#modal">ADD NEW BOOK</button>
 
-      <div id="myModal" class="modal">
+      <div class="modal" id="modal">
 
         <div class="modal-content">
 
-          <span class="close">&times;</span>
+          <div class="modal-header">
+            <div class="modal-title">Add a book to your library</div>
+            <button data-close-button class="close-modal-button">&times;</button>
+          </div>
           Title: <input class="book-input" type="text">
           Author: <input class="book-input" type="text">
           Pages: <input class="book-input" type="text">
 
-          <button id="addBookBtn">Submit</button>
+          <button id="add-book-button">Submit</button>
 
         </div>
 
@@ -50,6 +53,8 @@
     </div>
 
   </div>
+
+  <div id="overlay"></div>
   
 </body>
 </html>
