@@ -26,11 +26,19 @@
             <div class="modal-title">Add a book to your library</div>
             <button data-close-button class="close-modal-button">&times;</button>
           </div>
-          Title: <input class="book-input" type="text">
-          Author: <input class="book-input" type="text">
-          Pages: <input class="book-input" type="text">
 
-          <button id="add-book-button">Submit</button>
+          <form class="new-book-form" id="addBookForm">
+
+          <input class="input" type="text" id="title" placeholder="Title" required maxlength="100">
+          <input class="input" type="text" id="author" placeholder="Author" required maxlength="100">
+          <input class="input" type="number" id="pages" placeholder="Pages" required max="10000">
+
+          <div class="is-read">
+            <label for="is-read">Have you read it?</label>
+            <input class="checkbox" type="checkbox" id="isRead" />
+          </div>
+          <button class="submit-button" type="submit">Submit</button>
+          </form>
 
         </div>
 
@@ -41,10 +49,6 @@
     <div class="books-heading">
 
       <h1>Current Books in Library</h1>
-
-    </div>
-
-    <div class="form">
 
     </div>
 
