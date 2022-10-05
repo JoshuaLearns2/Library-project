@@ -5,56 +5,40 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Library</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
-
+  <link rel="stylesheet" href="./style2.css"/>
+  <script src="./script2.js" defer></script>
 </head>
-
 <body>
+  <header>
 
-  <div class="container">
+    <h1>Library Project</h1>
+    <button id="addBookBtn" data-modal-target="#modal">ADD BOOK</button>
 
-    <div class="form-heading">
+    <div class="modal" id="modal">
+      <div class="modal-content">
 
-      <button data-modal-target="#modal">ADD NEW BOOK</button>
+        <div class="modal-header">
+          <h1>Add a book to your library</h1>
+          <button data-close-button class="close-modal-button">&times;</button>
+        </div>
 
-      <div class="modal" id="modal">
+        <div class="modal-form-div">
+          <form id="form">
+           <input class="title" id="title" type="text" placeholder="Title" />
+           <input class="author" id="author" type="text" placeholder="Author" />
+           <input class="pages" id="pages" type="number" placeholder="Pages" />
+            <!-- <input class="title" id="title" type="text" placeholder="Title" /> -->
 
-        <div class="modal-content">
-
-          <div class="modal-header">
-            <div class="modal-title">Add a book to your library</div>
-            <button data-close-button class="close-modal-button">&times;</button>
-          </div>
-
-          <form class="new-book-form" id="addBookForm">
-
-          <input class="input" type="text" id="title" placeholder="Title" required maxlength="100">
-          <input class="input" type="text" id="author" placeholder="Author" required maxlength="100">
-          <input class="input" type="number" id="pages" placeholder="Pages" required max="10000">
-
-          <div class="is-read">
-            <label for="is-read">Have you read it?</label>
-            <input class="checkbox" type="checkbox" id="isRead" />
-          </div>
-          <button class="submit-button" type="submit">Submit</button>
+            <button class="submitBtn" id="submitBtn">Submit</button>
           </form>
-
         </div>
 
       </div>
-
     </div>
 
-    <div class="books-heading">
+  </header>
 
-      <h1>Current Books in Library</h1>
-
-    </div>
-
-    <div class="books">
-
-    </div>
+  <div class="book-grid">
 
   </div>
 

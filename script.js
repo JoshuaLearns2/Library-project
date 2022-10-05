@@ -37,9 +37,10 @@ function closeModal(modal) {
   overlay.classList.remove('active')
 }
 
-
+// Creates an array
 let myLibrary = [];
 
+// Book constructor
 function Book(title, author, pages, read) {
   this.title = title;
   this.author = author;
@@ -47,44 +48,35 @@ function Book(title, author, pages, read) {
   this.read = read;
 }
 
-function addBookToLibrary(title, author, pages, isRead) {
-  let newBook = new Book(title, author, pages, isRead);
+// Adds a book to the myLibrary array and displays it on the webpage
+function addBookToLibrary(title, author, pages, read) {
+  let newBook = new Book(title, author, pages, read);
   myLibrary.push(newBook);
+  displayBooks();
 }
 
-function displayBooksOnPage() {
-  const books = document.querySelector('.books');
+// Takes values from form and generates a new book
+let submitBtn = document.getElementById('submitBtn');
+submitBtn.addEventListener('click', function (e) {
+  e.preventDefault();
+  addBookToLibrary(title.value, author.value, pages.value)
+  closeModal(modal)
+});
+
+// Displays books to webpage using DOM manipulation
+function displayBooks() {
+  
+  const bookGrid = document.querySelector('.book-grid')
   
   myLibrary.forEach(myLibrary => {
     const card = document.createElement('div');
     card.classList.add('card');
-    books.appendChild(card);
+    bookGrid.appendChild(card);
     for (let key in myLibrary) {
       console.log(`${myLibrary[key]}`);
       const para = document.createElement('p');
-      para.textContent = (`${myLibrary[key]}`);
+      para.textContent = (`${myLibrary[key]}`);  
       card.appendChild(para);
     }
   })
 }
-
-const getBookFromInput = () => {
-  const title = document.getElementById('title').value
-  const author = document.getElementById('author').value
-  const pages = document.getElementById('pages').value
-  const isRead = document.getElementById('isRead').checked
-  return new Book(title, author, pages, isRead)
-}
-
-const addBook = (e) => {
-  addBookToLibrary(Book())
-  displayBooksOnPage()
-}
-
-addBookForm.onsubmit = addBook
-
-addBookToLibrary("The Hobbit", "J.R.R. Tolkien", "225")
-addBookToLibrary("The Hobbit", "J.R.R. Tolkien", "225")
-addBookToLibrary("The Hobbit", "J.R.R. Tolkien", "225")
-
-displayBooksOnPage();

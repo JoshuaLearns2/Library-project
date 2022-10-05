@@ -1,5 +1,5 @@
 body {
-  text-align: center;
+  /* background-color: antiquewhite; */
 }
 
 .modal {
@@ -42,18 +42,4 @@ body {
 #overlay.active {
   opacity: 1;
   pointer-events: all;
-}
-
-.books {
-  display: flex;
-  justify-content: center;
-}
-
-.card {
-  background-color: antiquewhite ;
-  padding: 10px;
-  margin: 10px;
-  border-radius: 5px;
-  width: 150px;
-  height: 150px;
 }
