@@ -5,8 +5,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Library</title>
-  <link rel="stylesheet" href="./style2.css"/>
-  <script src="./script2.js" defer></script>
+  <link rel="stylesheet" href="./style.css"/>
+  <script src="./script.js" defer></script>
 </head>
 <body>
   <header>
@@ -24,12 +24,21 @@
 
         <div class="modal-form-div">
           <form id="form">
-           <input class="title" id="title" type="text" placeholder="Title" />
-           <input class="author" id="author" type="text" placeholder="Author" />
-           <input class="pages" id="pages" type="number" placeholder="Pages" />
-            <!-- <input class="title" id="title" type="text" placeholder="Title" /> -->
+            <div>
+              <input class="title" id="title" type="text" placeholder="Title" required />
+            </div>
+            <div>
+              <input class="author" id="author" type="text" placeholder="Author" />
+            </div>
+            <div>
+              <input class="pages" id="pages" type="number" placeholder="Pages" />
+            </div>
+            <div>
+              <label>Have you read it?</label>
+              <input class="read" id="read" type="checkbox" />
+            </div>
 
-            <button class="submitBtn" id="submitBtn">Submit</button>
+            <button class="submitBtn" id="submitBtn" type="submit">Submit</button>
           </form>
         </div>
 
