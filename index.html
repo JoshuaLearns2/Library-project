@@ -5,49 +5,30 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Library</title>
-  <link rel="stylesheet" href="./style.css"/>
+  <link rel="stylesheet" href="style.css" />
   <script src="./script.js" defer></script>
 </head>
 <body>
   <header>
-
-    <h1>Library Project</h1>
-    <button id="addBookBtn" data-modal-target="#modal">ADD BOOK</button>
-
-    <div class="modal" id="modal">
-      <div class="modal-content">
-
-        <div class="modal-header">
-          <h1>Add a book to your library</h1>
-          <button data-close-button class="close-modal-button">&times;</button>
-        </div>
-
-        <div class="modal-form-div">
-          <form id="form">
-            <div>
-              <input class="title" id="title" type="text" placeholder="Title" />
-            </div>
-            <div>
-              <input class="author" id="author" type="text" placeholder="Author" />
-            </div>
-            <div>
-              <input class="pages" id="pages" type="number" placeholder="Pages" />
-            </div>
-
-            <button class="submitBtn" id="submitBtn" type="submit">Submit</button>
-          </form>
-        </div>
-
-      </div>
-    </div>
-
+    <div class="logo">Library</div>
   </header>
-
-  <div class="book-grid">
-
-  </div>
-
-  <div id="overlay"></div>
-  
+  <main>
+    <div class="button-container">
+      <button class="add-book-btn">Add a book</button>
+    </div>
+    <div class="card-container">
+      <div class="card-div"></div>
+      <div class="card-div"></div>
+      <div class="card-div"></div>
+      <div class="card-div"></div>
+      <div class="card-div"></div>
+      <div class="card-div"></div>
+      <div class="card-div"></div>
+      <div class="card-div"></div>
+    </div>
+  </main>
+  <footer>
+    Copyright &copy; 2022 Joshua Meeks
+  </footer>
 </body>
 </html>
