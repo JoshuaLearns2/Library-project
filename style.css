@@ -62,6 +62,7 @@ body {
 
 .modal-form > input {
   padding-left: .5rem;
+  border: none;
 }
 
 .submit-book-btn {
@@ -81,10 +82,16 @@ header {
 }
 
 .logo {
+  display: flex;
+  align-items: center;
   font-family: Helvetica, sans-serif;
   font-size: 1.8rem;
   font-weight: 600;
   color: #ffffff;
+}
+
+.logo-lettering {
+  padding: .1rem 0 0 .6rem;
 }
 
 footer {
