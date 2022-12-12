@@ -46,7 +46,8 @@ header {
 
 .logo {
   font-family: Helvetica, sans-serif;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
+  font-weight: 600;
   color: #ffffff;
 }
 
@@ -79,7 +80,7 @@ footer {
   border-radius: 20px;
 }
 
-.add-book-btn:hover {
+button:hover {
   cursor: pointer;
 }
 
@@ -97,9 +98,60 @@ footer {
 
 .card-div {
   width: 300px;
-  height: 300px;
+  height: 350px;
+  min-height: 350px;
   background-color: #e2e8f0;
   box-shadow: 2px 2px 5px 0 rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.book-heading {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #334155;
+}
+
+.card-cover-container {
+  display: flex;
+  justify-content: center;
+  height: 180px;
+  background-color: #94a3b8;
+}
+
+.card-info-container {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  padding-top: 1.2rem;
+
+}
+
+.card-btn-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: .5rem 1rem 1rem 1rem;
+  position: absolute;
+  bottom: 0;
+}
+
+.card-btn-container > button {
+  width: 64px;
+  height: 24px;
+  border: none;
+  margin: .2rem;
+  color: #ffffff;
+}
+
+.read-status-btn {
+  background-color: #94a3b8;
+}
+
+.edit-btn {
+  background-color: #0ea5e9;
+}
+
+.remove-btn {
+  background-color: #ef4444;
 }
 
 @media (max-width: 400px) {

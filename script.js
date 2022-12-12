@@ -13,6 +13,7 @@ const closeModal = document.querySelector('.close-modal')
 
 closeModal.onclick = function() {
   modalBackground.style.display = "none";
+
 }
 
 // Adds functionality to the modal's submit button by passing the values into the DOM 
@@ -26,10 +27,16 @@ submitBookBtn.onclick = function(e) {
   const createBookCard = document.createElement('div');
   createBookCard.className = "card-div";
   cardContainer.appendChild(createBookCard);
-  modalBackground.style.display = "none";
-
-  const bookTitle = document.createElement('h2');
+  
+  const bookTitle = document.createElement('h3');
   bookTitle.textContent = document.querySelector('.title').value;
   createBookCard.appendChild(bookTitle);
+
+  const bookAuthor = document.createElement('p');
+  bookAuthor.textContent = `By ${document.querySelector('.author').value}`;
+  createBookCard.appendChild(bookAuthor);
+
+  
+  modalBackground.style.display = "none";
   console.log(document.querySelector('.title').value)
 }
