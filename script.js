@@ -9,7 +9,7 @@ addBookBtn.onclick = function() {
 
 // Adds functionality to the modal's close button
 
-const closeModal = document.querySelector('.close-modal')
+const closeModal = document.querySelector('.close-modal-btn')
 
 closeModal.onclick = function() {
   modalBackground.style.display = "none";

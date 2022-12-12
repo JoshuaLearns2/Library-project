@@ -29,9 +29,45 @@ body {
 }
 
 .modal {
+  display: flex;
+  flex-direction: column;
   width: 400px;
   height: 400px;
   background-color: #e2e8f0;
+}
+
+.modal-form {
+  display: flex;
+  height: 80%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.close-modal-btn {
+  width: 20px;
+  height: 20px;
+  background-color: #ef4444;
+  font-size: 1rem;
+  margin: .5rem;
+  float: right;
+  border: none;
+}
+
+.modal-form > input, .submit-book-btn {
+  width: 50%;
+  height: 30px;
+  margin: .5rem;
+}
+
+.modal-form > input {
+  padding-left: .5rem;
+}
+
+.submit-book-btn {
+  background-color: #0ea5e9;
+  color: #ffffff;
+  border: none;
 }
 
 header {
