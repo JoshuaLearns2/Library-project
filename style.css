@@ -48,6 +48,7 @@ body {
   width: 20px;
   height: 20px;
   background-color: #ef4444;
+  color: #ffffff;
   font-size: 1rem;
   margin: .5rem;
   float: right;
@@ -185,8 +186,12 @@ button:hover {
   color: #ffffff;
 }
 
-.read-status-btn {
+.unread-status-btn {
   background-color: #94a3b8;
+}
+
+.read-status-btn {
+  background-color: #22c55e;
 }
 
 .edit-btn {
