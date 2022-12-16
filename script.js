@@ -55,23 +55,9 @@ submitBookBtn.onclick = function(e) {
 
   const readStatusButton = document.createElement('button');
   readStatusButton.id = 'read-status';
-  readStatusButton.className = 'unread-status-btn';
+  readStatusButton.className = 'unread';
   readStatusButton.textContent = 'Unread';
   cardButtonContainer.appendChild(readStatusButton);
-
-  document.getElementById('read-status').addEventListener('click', (e) => {
-    e.stopImmediatePropagation();
-    readStatusButton.className.includes('unread-status-btn') 
-    ? (readStatusButton.className = 'read-status-btn', document.querySelector('.read-status-btn').textContent = 'Read') 
-    : (readStatusButton.className = 'unread-status-btn', document.querySelector('.unread-status-btn').textContent = 'Unread')
-  });
-
-  // const changeReadStatus = document.getElementById('read-status');
-  // changeReadStatus.addEventListener('click', () => {
-  //   if (readStatusButton.className.includes('unread-status-btn')) {
-  //     return (readStatusButton.className = 'read-status-btn', readStatusButton.textContent = 'Read');
-  //   } else return (readStatusButton.className = 'unread-status-btn', readStatusButton.textContent = 'Unread');
-  // });
 
   const editButton = document.createElement('button');
   editButton.className = 'edit-btn';
@@ -91,26 +77,25 @@ submitBookBtn.onclick = function(e) {
 
 // Book card read/unread toggle status
 
-// const readStatusButton = document.getElementById('read-status');
-
-// readStatusButton.onclick = function() {
-//     readStatusButton.className.includes('unread-status-btn') 
-//     ? (readStatusButton.className = 'read-status-btn', document.querySelector('.read-status-btn').textContent = 'Read') 
-//     : (readStatusButton.className = 'unread-status-btn', document.querySelector('.unread-status-btn').textContent = 'Unread');
-// }
+document.addEventListener('click', e => {
+  if (e.target.matches('.unread')) {
+    e.target.className = 'read', e.target.textContent = 'Read'
+  } else if (e.target.matches('.read')) {
+    return e.target.className = 'unread', e.target.textContent = 'Unread'
+    console.log(e.target.className)
+  } 
+  })
 
 // Book card edit button functionality which re-displays the modal with the form filled out with the card's values
 
-// const editButton = document.querySelector('.edit-btn')
-
-// editButton.onclick = function() {
-
-// }
 
 // Book card remove button functionality
 
-// const removeButton = document.querySelector('.remove-btn')
-
+document.addEventListener('click', e => {
+  if (e.target.matches('.remove-btn')) {
+    document.querySelector('.card-div').remove()
+  }
+})
 // removeButton.onclick = function() {
 //   document.querySelector('.card-div').remove()
 // }
