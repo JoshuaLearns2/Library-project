@@ -86,8 +86,21 @@ document.addEventListener('click', e => {
   } 
   })
 
-// Book card edit button functionality which re-displays the modal with the form filled out with the card's values
+// Book card edit button functionality which re-displays the modal to edit card's values
 
+document.addEventListener('click', e => {
+  if (e.target.matches('.edit-btn')) {
+    modalBackground.style.display = "flex";
+    document.querySelector('.title').value = document.querySelector('.book-heading').textContent;
+    document.querySelector('.author').value = document.querySelector('.book-author').textContent - 'By';
+    // document.querySelector('.submit-book-btn').addEventListener('click', e => {
+    //   e.preventDefault();
+    //   document.querySelector('.title').value = document.querySelector('.book-heading').textContent;
+    //   document.querySelector('.author').value = document.querySelector('.book-author').textContent;
+    // });
+    // console.log(document.querySelector('.book-heading'), document.querySelector('.book-author'))
+  }
+})
 
 // Book card remove button functionality
 
@@ -96,7 +109,4 @@ document.addEventListener('click', e => {
     document.querySelector('.card-div').remove()
   }
 })
-// removeButton.onclick = function() {
-//   document.querySelector('.card-div').remove()
-// }
 
