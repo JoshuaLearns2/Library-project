@@ -1,3 +1,14 @@
+// Creates an empty array for book data to be stored in
+
+let library = [];
+
+// Object constructor for the book data
+
+function bookData(title, author) {
+  this.title = title;
+  this.author = author;
+}
+
 // Adds functionality to the "Add a book" button by displaying the modal
 
 const addBookBtn = document.querySelector('.add-book-btn')
@@ -24,6 +35,22 @@ const submitBookBtn = document.querySelector('.submit-book-btn')
 submitBookBtn.onclick = function(e) {
   e.preventDefault();
 
+  const book = new bookData(document.querySelector('.title').value, document.querySelector('.author').value);
+
+  library.push(book);
+
+  createBookCard(document.querySelector('.title').value, document.querySelector('.author').value);
+  // console.log(library)
+
+  document.querySelector('.title').value = '';
+  document.querySelector('.author').value = '';
+  
+  modalBackground.style.display = "none";
+}
+
+// DOM creation function
+
+function createBookCard(title, author) {
   const cardContainer = document.querySelector('.card-container');
   const bookCard = document.createElement('div');
   bookCard.className = 'card-div';
@@ -41,12 +68,12 @@ submitBookBtn.onclick = function(e) {
   
   const bookTitle = document.createElement('h2');
   bookTitle.className = 'book-heading';
-  bookTitle.textContent = document.querySelector('.title').value;
+  bookTitle.textContent = title;
   cardInfoContainer.appendChild(bookTitle);
 
   const bookAuthor = document.createElement('p');
   bookAuthor.className = 'book-author';
-  bookAuthor.textContent = `By ${document.querySelector('.author').value}`;
+  bookAuthor.textContent = `By ${author}`;
   cardInfoContainer.appendChild(bookAuthor);
 
   const cardButtonContainer = document.createElement('div');
@@ -68,11 +95,6 @@ submitBookBtn.onclick = function(e) {
   removeButton.className = 'remove-btn';
   removeButton.textContent = 'Remove';
   cardButtonContainer.appendChild(removeButton);
-
-  document.querySelector('.title').value = '';
-  document.querySelector('.author').value = '';
-  
-  modalBackground.style.display = "none";
 }
 
 // Book card read/unread toggle status
@@ -90,15 +112,7 @@ document.addEventListener('click', e => {
 
 document.addEventListener('click', e => {
   if (e.target.matches('.edit-btn')) {
-    modalBackground.style.display = "flex";
-    document.querySelector('.title').value = document.querySelector('.book-heading').textContent;
-    document.querySelector('.author').value = document.querySelector('.book-author').textContent - 'By';
-    // document.querySelector('.submit-book-btn').addEventListener('click', e => {
-    //   e.preventDefault();
-    //   document.querySelector('.title').value = document.querySelector('.book-heading').textContent;
-    //   document.querySelector('.author').value = document.querySelector('.book-author').textContent;
-    // });
-    // console.log(document.querySelector('.book-heading'), document.querySelector('.book-author'))
+    
   }
 })
 
@@ -106,7 +120,7 @@ document.addEventListener('click', e => {
 
 document.addEventListener('click', e => {
   if (e.target.matches('.remove-btn')) {
-    document.querySelector('.card-div').remove()
+    e.target.parentElement.parentElement.remove()
   }
 })
 
