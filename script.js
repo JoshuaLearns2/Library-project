@@ -4,7 +4,7 @@ let library = [];
 
 // Object constructor for the book data
 
-function bookData(title, author) {
+function Book(title, author) {
   this.title = title;
   this.author = author;
 }
@@ -32,23 +32,22 @@ closeModal.onclick = function() {
 
 const submitBookBtn = document.querySelector('.submit-book-btn')
 
-submitBookBtn.onclick = function(e) {
+submitBookBtn.addEventListener('click', e => {
   e.preventDefault();
 
-  const book = new bookData(document.querySelector('.title').value, document.querySelector('.author').value);
+  const book = new Book(document.querySelector('.title').value, document.querySelector('.author').value);
 
   library.push(book);
 
   createBookCard(document.querySelector('.title').value, document.querySelector('.author').value);
-  // console.log(library)
 
   document.querySelector('.title').value = '';
   document.querySelector('.author').value = '';
   
   modalBackground.style.display = "none";
-}
+})
 
-// DOM creation function
+// DOM book card creation
 
 function createBookCard(title, author) {
   const cardContainer = document.querySelector('.card-container');
@@ -104,7 +103,6 @@ document.addEventListener('click', e => {
     e.target.className = 'read', e.target.textContent = 'Read'
   } else if (e.target.matches('.read')) {
     return e.target.className = 'unread', e.target.textContent = 'Unread'
-    console.log(e.target.className)
   } 
   })
 
@@ -112,7 +110,41 @@ document.addEventListener('click', e => {
 
 document.addEventListener('click', e => {
   if (e.target.matches('.edit-btn')) {
-    
+    const cardDiv = e.target.parentElement.parentElement;
+    const testTitle = e.target.parentElement.parentElement.querySelector('.book-heading').textContent;
+
+    for (let i = 0; i < library.length; i++) {
+      const bookCheck = library[i]
+
+      if (bookCheck.title === testTitle) {
+        modalBackground.style.display = "flex";
+        document.querySelector('.title').value = bookCheck.title;
+        document.querySelector('.author').value = bookCheck.author;
+        library.splice(library[i], 1);
+        (console.log(library[i]))
+
+        submitBookBtn.addEventListener('click', e => {
+          e.preventDefault();
+
+          cardDiv.remove();
+
+          let title = e.target.parentElement.parentElement.querySelector('.title').value
+          let author = e.target.parentElement.parentElement.querySelector('.author').value
+          const book = new Book(title, author);
+          
+          library.push(book);
+          
+          createBookCard(title, author);
+        
+          document.querySelector('.title').value = '';
+          document.querySelector('.author').value = '';
+          
+          modalBackground.style.display = "none";
+        })
+        
+        break;
+      }
+    }
   }
 })
 
@@ -120,7 +152,18 @@ document.addEventListener('click', e => {
 
 document.addEventListener('click', e => {
   if (e.target.matches('.remove-btn')) {
-    e.target.parentElement.parentElement.remove()
+    
+    const title = e.target.parentElement.parentElement.querySelector('.book-heading').textContent;
+
+    for (let i = 0; i < library.length; i++) {
+      const bookCheck = library[i]
+
+      if (bookCheck.title === title) {
+        library.splice(i, 1);
+        e.target.parentElement.parentElement.remove()
+      }
+    }
+
   }
 })
 
