@@ -14,18 +14,18 @@ body {
 }
 
 .modal-background {
-  display: none; /* Hidden by default */
+  display: none; 
   justify-content: center;
   padding-top: 10%;
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  position: fixed;
+  z-index: 1; 
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.4);
 }
 
 .modal {
@@ -67,6 +67,65 @@ body {
 }
 
 .submit-book-btn {
+  background-color: #0ea5e9;
+  color: #ffffff;
+  border: none;
+}
+
+.edit-modal-background {
+  display: none;
+  justify-content: center;
+  padding-top: 10%;
+  position: fixed; 
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgb(0,0,0); 
+  background-color: rgba(0,0,0,0.4);
+}
+
+.edit-modal {
+  display: flex;
+  flex-direction: column;
+  width: 400px;
+  height: 400px;
+  background-color: #e2e8f0;
+}
+
+.edit-modal-form {
+  display: flex;
+  height: 80%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.close-edit-modal-btn {
+  width: 20px;
+  height: 20px;
+  background-color: #ef4444;
+  color: #ffffff;
+  font-size: 1rem;
+  margin: .5rem;
+  float: right;
+  border: none;
+}
+
+.edit-modal-form > input, .edit-submit-book-btn {
+  width: 50%;
+  height: 30px;
+  margin: .5rem;
+}
+
+.edit-modal-form > input {
+  padding-left: .5rem;
+  border: none;
+}
+
+.edit-submit-book-btn {
   background-color: #0ea5e9;
   color: #ffffff;
   border: none;
@@ -208,11 +267,11 @@ button:hover {
     grid-template-columns: 300px;
   }
 
-  .modal-background {
+  .modal-background, .edit-modal-background {
     padding-top: 25%;
   }
 
-  .modal {
+  .modal, .edit-modal {
     width: 300px;
     height: 300px;
   }

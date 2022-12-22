@@ -105,55 +105,58 @@ document.addEventListener('click', e => {
     return e.target.className = 'unread', e.target.textContent = 'Unread'
   } 
   })
-
-// Book card edit button functionality which re-displays the modal to edit card's values
+  
+  // Book card edit button functionality which re-displays the modal to edit card's values
+  
+const closeEditModal = document.querySelector('.close-edit-modal-btn');
+const editModalBackground = document.querySelector('.edit-modal-background');
+const editSubmitBookBtn = document.querySelector('.edit-submit-book-btn');
 
 document.addEventListener('click', e => {
   if (e.target.matches('.edit-btn')) {
-    const cardDiv = e.target.parentElement.parentElement;
-    const testTitle = e.target.parentElement.parentElement.querySelector('.book-heading').textContent;
+    const title = e.target.parentElement.parentElement.querySelector('.book-heading').textContent;
+    const divCard = e.target.parentElement.parentElement;
 
-    for (let i = 0; i < library.length; i++) {
-      const bookCheck = library[i]
-
-      if (bookCheck.title === testTitle) {
-        modalBackground.style.display = "flex";
-        document.querySelector('.title').value = bookCheck.title;
-        document.querySelector('.author').value = bookCheck.author;
-        library.splice(library[i], 1);
-        (console.log(library[i]))
-
-        submitBookBtn.addEventListener('click', e => {
-          e.preventDefault();
-
-          cardDiv.remove();
-
-          let title = e.target.parentElement.parentElement.querySelector('.title').value
-          let author = e.target.parentElement.parentElement.querySelector('.author').value
-          const book = new Book(title, author);
-          
-          library.push(book);
-          
-          createBookCard(title, author);
-        
-          document.querySelector('.title').value = '';
-          document.querySelector('.author').value = '';
-          
-          modalBackground.style.display = "none";
-        })
-        
-        break;
-      }
+    editModalBackground.style.display = "flex";
+    
+    closeEditModal.onclick = function() {
+      editModalBackground.style.display = "none";
     }
+
+    editSubmitBookBtn.addEventListener('click', e => {
+      e.preventDefault();
+
+      for (let i = 0; i < library.length; i++) {
+        if (library[i].title === title) {
+          divCard.remove();
+          library.splice(i, 1);
+          const editbook = new Book(document.querySelector('.edit-title').value, document.querySelector('.edit-author').value);
+          library.push(editbook);
+          
+          createBookCard(document.querySelector('.edit-title').value, document.querySelector('.edit-author').value);
+          
+          editModalBackground.style.display = "none";
+
+          document.querySelector('.edit-title').value = '';
+          document.querySelector('.edit-author').value = '';
+
+          break;
+        }
+      }
+      
+      
+    })
+    
   }
 })
 
 // Book card remove button functionality
 
-document.addEventListener('click', e => {
+const removeCard = document.addEventListener('click', e => {
   if (e.target.matches('.remove-btn')) {
     
     const title = e.target.parentElement.parentElement.querySelector('.book-heading').textContent;
+    e.target.parentElement.parentElement.remove()
 
     for (let i = 0; i < library.length; i++) {
       const bookCheck = library[i]
