@@ -1,6 +1,6 @@
 // Creates an empty array for book data to be stored in
 
-let library = [];
+let library = JSON.parse(localStorage.getItem('books')) || [];
 
 // Object constructor for the book data
 
@@ -38,6 +38,8 @@ submitBookBtn.addEventListener('click', e => {
   const book = new Book(document.querySelector('.title').value, document.querySelector('.author').value);
 
   library.push(book);
+
+  localStorage.setItem('books', JSON.stringify(library));
 
   createBookCard(document.querySelector('.title').value, document.querySelector('.author').value);
 
@@ -96,6 +98,14 @@ function createBookCard(title, author) {
   cardButtonContainer.appendChild(removeButton);
 }
 
+// Loops through the array and sets title and author for the DOM
+
+function bookCardLoop() {
+  for (let i = 0; i < library.length; i++) {
+    createBookCard(library[i].title, library[i].author);
+  }
+}
+
 // Book card read/unread toggle status
 
 document.addEventListener('click', e => {
@@ -106,7 +116,7 @@ document.addEventListener('click', e => {
   } 
   })
   
-  // Book card edit button functionality which re-displays the modal to edit card's values
+// Book card edit button functionality which re-displays the modal to edit card's values
   
 const closeEditModal = document.querySelector('.close-edit-modal-btn');
 const editModalBackground = document.querySelector('.edit-modal-background');
@@ -115,9 +125,13 @@ const editSubmitBookBtn = document.querySelector('.edit-submit-book-btn');
 document.addEventListener('click', e => {
   if (e.target.matches('.edit-btn')) {
     const title = e.target.parentElement.parentElement.querySelector('.book-heading').textContent;
+    const author = e.target.parentElement.parentElement.querySelector('.book-author').textContent;
     const divCard = e.target.parentElement.parentElement;
-
+    
     editModalBackground.style.display = "flex";
+    
+    document.querySelector('.edit-title').value = title;
+    document.querySelector('.edit-author').value = author.replace('By ', '');
     
     closeEditModal.onclick = function() {
       editModalBackground.style.display = "none";
@@ -128,12 +142,18 @@ document.addEventListener('click', e => {
 
       for (let i = 0; i < library.length; i++) {
         if (library[i].title === title) {
+
           divCard.remove();
+
           library.splice(i, 1);
+
           const editbook = new Book(document.querySelector('.edit-title').value, document.querySelector('.edit-author').value);
+
           library.push(editbook);
-          
-          createBookCard(document.querySelector('.edit-title').value, document.querySelector('.edit-author').value);
+          localStorage.setItem('books', JSON.stringify(library));
+
+          document.querySelector('.card-container').innerHTML = '';
+          bookCardLoop();
           
           editModalBackground.style.display = "none";
 
@@ -163,6 +183,7 @@ const removeCard = document.addEventListener('click', e => {
 
       if (bookCheck.title === title) {
         library.splice(i, 1);
+        localStorage.setItem('books', JSON.stringify(library));
         e.target.parentElement.parentElement.remove()
       }
     }
@@ -170,3 +191,4 @@ const removeCard = document.addEventListener('click', e => {
   }
 })
 
+window.addEventListener("load", bookCardLoop);
