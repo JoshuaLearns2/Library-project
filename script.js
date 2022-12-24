@@ -4,9 +4,10 @@ let library = JSON.parse(localStorage.getItem('books')) || [];
 
 // Object constructor for the book data
 
-function Book(title, author) {
+function Book(title, author, imgsrc) {
   this.title = title;
   this.author = author;
+  this.imgsrc = imgsrc;
 }
 
 // Adds functionality to the "Add a book" button by displaying the modal
@@ -35,23 +36,28 @@ const submitBookBtn = document.querySelector('.submit-book-btn')
 submitBookBtn.addEventListener('click', e => {
   e.preventDefault();
 
-  const book = new Book(document.querySelector('.title').value, document.querySelector('.author').value);
+  title = document.querySelector('.title').value
+  author = document.querySelector('.author').value
 
-  library.push(book);
+  // const book = new Book(title, author, bookSearch(title));
+
+  // library.push(book);
+
+  bookSearch(title, author);
 
   localStorage.setItem('books', JSON.stringify(library));
 
-  createBookCard(document.querySelector('.title').value, document.querySelector('.author').value);
+  // createBookCard(title, author);
 
-  document.querySelector('.title').value = '';
-  document.querySelector('.author').value = '';
+  title = '';
+  author = '';
   
   modalBackground.style.display = "none";
 })
 
 // DOM book card creation
 
-function createBookCard(title, author) {
+function createBookCard(title, author, imgsrc) {
   const cardContainer = document.querySelector('.card-container');
   const bookCard = document.createElement('div');
   bookCard.className = 'card-div';
@@ -61,6 +67,8 @@ function createBookCard(title, author) {
   cardCoverContainer.className = 'card-cover-container';
   bookCard.appendChild(cardCoverContainer);
   bookCover = document.createElement('img');
+  bookCover.className = 'book-cover-img';
+  bookCover.src = imgsrc;
   cardCoverContainer.appendChild(bookCover);
 
   const cardInfoContainer = document.createElement('div');
@@ -102,7 +110,7 @@ function createBookCard(title, author) {
 
 function bookCardLoop() {
   for (let i = 0; i < library.length; i++) {
-    createBookCard(library[i].title, library[i].author);
+    bookSearch(library[i].title, library[i].author);
   }
 }
 
@@ -190,5 +198,26 @@ const removeCard = document.addEventListener('click', e => {
 
   }
 })
+
+// Retreive book cover images utilizing Open Library API
+
+function bookSearch(title, author) {
+  searchTitle = title.replace(/ /g, '+');
+  
+  let imgFinder =
+  fetch('http://openlibrary.org/search.json?q=' + searchTitle)
+  .then(res => res.json())
+  .then(data => {
+    imgsrc = `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`
+    return imgsrc;
+  }); 
+  
+  return imgFinder.then(() => {
+    const book = new Book(title, author, imgsrc)
+    library.push(book)
+    createBookCard(title, author, imgsrc)
+  })
+
+}
 
 window.addEventListener("load", bookCardLoop);
