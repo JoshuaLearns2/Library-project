@@ -49,9 +49,10 @@ submitBookBtn.addEventListener('click', e => {
 
   // createBookCard(title, author);
 
-  title = '';
-  author = '';
-  
+  // title = '';
+  // author = '';
+  document.querySelector('.title').value = '';
+  document.querySelector('.author').value = '';
   modalBackground.style.display = "none";
 })
 
