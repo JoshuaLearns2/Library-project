@@ -1,6 +1,6 @@
 // Creates an empty array for book data to be stored in
 
-let library = JSON.parse(localStorage.getItem('books')) || [];
+let library = [];
 
 // Object constructor for the book data
 
@@ -39,18 +39,8 @@ submitBookBtn.addEventListener('click', e => {
   title = document.querySelector('.title').value
   author = document.querySelector('.author').value
 
-  // const book = new Book(title, author, bookSearch(title));
-
-  // library.push(book);
-
   bookSearch(title, author);
 
-  localStorage.setItem('books', JSON.stringify(library));
-
-  // createBookCard(title, author);
-
-  // title = '';
-  // author = '';
   document.querySelector('.title').value = '';
   document.querySelector('.author').value = '';
   modalBackground.style.display = "none";
@@ -159,7 +149,7 @@ document.addEventListener('click', e => {
           const editbook = new Book(document.querySelector('.edit-title').value, document.querySelector('.edit-author').value);
 
           library.push(editbook);
-          localStorage.setItem('books', JSON.stringify(library));
+          // localStorage.setItem('books', JSON.stringify(library));
 
           document.querySelector('.card-container').innerHTML = '';
           bookCardLoop();
@@ -185,14 +175,14 @@ const removeCard = document.addEventListener('click', e => {
   if (e.target.matches('.remove-btn')) {
     
     const title = e.target.parentElement.parentElement.querySelector('.book-heading').textContent;
-    e.target.parentElement.parentElement.remove()
+    // e.target.parentElement.parentElement.remove()
 
     for (let i = 0; i < library.length; i++) {
       const bookCheck = library[i]
 
       if (bookCheck.title === title) {
         library.splice(i, 1);
-        localStorage.setItem('books', JSON.stringify(library));
+        // localStorage.setItem('books', JSON.stringify(library));
         e.target.parentElement.parentElement.remove()
       }
     }
