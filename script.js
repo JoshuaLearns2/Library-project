@@ -113,44 +113,44 @@ document.addEventListener('click', e => {
   } else if (e.target.matches('.read')) {
     return e.target.className = 'unread', e.target.textContent = 'Unread'
   } 
-  })
+})
   
 // Book card edit button functionality which re-displays the modal to edit card's values
   
 document.addEventListener('click', e => {
   if (e.target.matches('.edit-btn')) {
-
-    editModalBackground = document.querySelector('.edit-modal-background')
-    editCloseBtn = document.querySelector('.close-edit-modal-btn')
-    editSubmitBtn = document.querySelector('.edit-submit-book-btn')
-    editForm = document.querySelector('.edit-modal-form')
-    editModalTitle = document.querySelector('.edit-modal-title')
-    editModalAuthor = document.querySelector('.edit-modal-author')
+    
+    bookTitle = e.target.parentElement.parentElement.querySelector('.book-heading');
+    bookAuthor = e.target.parentElement.parentElement.querySelector('.book-author');
+    editModalBackground = document.querySelector('.edit-modal-background');
+    editCloseBtn = document.querySelector('.close-edit-modal-btn');
+    editSubmitBtn = document.querySelector('.edit-submit-book-btn');
+    editForm = document.querySelector('.edit-modal-form');
+    editTitle = document.querySelector('.edit-title');
+    editAuthor = document.querySelector('.edit-author');
 
     editModalBackground.style.display = 'flex';
 
     editCloseBtn.addEventListener('click', () => {
-      editModalBackground.style.display = 'none'
+      editModalBackground.style.display = 'none';
+      editTitle.value = '';
+      editAuthor.value = '';
     })
 
-    const bookTitle = e.target.parentElement.parentElement.querySelector('.book-heading').textContent
-
     for (i = 0; i < library.length; i++) {
-      if (library[i].title == bookTitle)
-
-      // open edit modale
-
-      // match dom title to array title
-
-      // fill edit modal inputs with array data
-
-      // edit array data to match new input data
-
-      // close modal
-
-      console.log('test')
-
+      if (library[i].title == bookTitle.textContent) {
+        editTitle.value = bookTitle.textContent;
+        editAuthor.value = bookAuthor.textContent;
+      }
     }
+
+    editSubmitBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+    })
+
+    // edit array data to match new input data
+
+    // close modal
   }
 })
 
