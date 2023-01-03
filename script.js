@@ -149,7 +149,6 @@ document.addEventListener('click', e => {
           const editbook = new Book(document.querySelector('.edit-title').value, document.querySelector('.edit-author').value);
 
           library.push(editbook);
-          // localStorage.setItem('books', JSON.stringify(library));
 
           document.querySelector('.card-container').innerHTML = '';
           bookCardLoop();
@@ -182,7 +181,6 @@ const removeCard = document.addEventListener('click', e => {
 
       if (bookCheck.title === title) {
         library.splice(i, 1);
-        // localStorage.setItem('books', JSON.stringify(library));
         e.target.parentElement.parentElement.remove()
       }
     }
@@ -210,5 +208,3 @@ function bookSearch(title, author) {
   })
 
 }
-
-window.addEventListener("load", bookCardLoop);
