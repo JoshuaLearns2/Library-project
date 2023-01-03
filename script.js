@@ -1,6 +1,6 @@
 // Creates an empty array for book data to be stored in
 
-let library = [];
+library = [];
 
 // Object constructor for the book data
 
@@ -46,7 +46,7 @@ submitBookBtn.addEventListener('click', e => {
   modalBackground.style.display = "none";
 })
 
-// DOM book card creation
+// UI
 
 function createBookCard(title, author, imgsrc) {
   const cardContainer = document.querySelector('.card-container');
@@ -117,64 +117,18 @@ document.addEventListener('click', e => {
   
 // Book card edit button functionality which re-displays the modal to edit card's values
   
-const closeEditModal = document.querySelector('.close-edit-modal-btn');
-const editModalBackground = document.querySelector('.edit-modal-background');
-const editSubmitBookBtn = document.querySelector('.edit-submit-book-btn');
-
 document.addEventListener('click', e => {
   if (e.target.matches('.edit-btn')) {
-    const title = e.target.parentElement.parentElement.querySelector('.book-heading').textContent;
-    const author = e.target.parentElement.parentElement.querySelector('.book-author').textContent;
-    const divCard = e.target.parentElement.parentElement;
-    
-    editModalBackground.style.display = "flex";
-    
-    document.querySelector('.edit-title').value = title;
-    document.querySelector('.edit-author').value = author.replace('By ', '');
-    
-    closeEditModal.onclick = function() {
-      editModalBackground.style.display = "none";
-    }
-
-    editSubmitBookBtn.addEventListener('click', e => {
-      e.preventDefault();
-
-      for (let i = 0; i < library.length; i++) {
-        if (library[i].title === title) {
-
-          divCard.remove();
-
-          library.splice(i, 1);
-
-          const editbook = new Book(document.querySelector('.edit-title').value, document.querySelector('.edit-author').value);
-
-          library.push(editbook);
-
-          document.querySelector('.card-container').innerHTML = '';
-          bookCardLoop();
-          
-          editModalBackground.style.display = "none";
-
-          document.querySelector('.edit-title').value = '';
-          document.querySelector('.edit-author').value = '';
-
-          break;
-        }
-      }
-      
-      
-    })
-    
+    console.log(e.target.parentElement.parentElement.querySelector('.book-heading').textContent)
   }
 })
 
 // Book card remove button functionality
 
-const removeCard = document.addEventListener('click', e => {
+document.addEventListener('click', e => {
   if (e.target.matches('.remove-btn')) {
     
     const title = e.target.parentElement.parentElement.querySelector('.book-heading').textContent;
-    // e.target.parentElement.parentElement.remove()
 
     for (let i = 0; i < library.length; i++) {
       const bookCheck = library[i]
@@ -208,3 +162,7 @@ function bookSearch(title, author) {
   })
 
 }
+
+bookSearch('Harry Potter and the Chamber of Secrets', 'J.K. Rowling');
+bookSearch('1984', 'George Orwell');
+bookSearch('Alice in Wonderland', 'Lewis Carroll');
