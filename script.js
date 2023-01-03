@@ -119,7 +119,38 @@ document.addEventListener('click', e => {
   
 document.addEventListener('click', e => {
   if (e.target.matches('.edit-btn')) {
-    console.log(e.target.parentElement.parentElement.querySelector('.book-heading').textContent)
+
+    editModalBackground = document.querySelector('.edit-modal-background')
+    editCloseBtn = document.querySelector('.close-edit-modal-btn')
+    editSubmitBtn = document.querySelector('.edit-submit-book-btn')
+    editForm = document.querySelector('.edit-modal-form')
+    editModalTitle = document.querySelector('.edit-modal-title')
+    editModalAuthor = document.querySelector('.edit-modal-author')
+
+    editModalBackground.style.display = 'flex';
+
+    editCloseBtn.addEventListener('click', () => {
+      editModalBackground.style.display = 'none'
+    })
+
+    const bookTitle = e.target.parentElement.parentElement.querySelector('.book-heading').textContent
+
+    for (i = 0; i < library.length; i++) {
+      if (library[i].title == bookTitle)
+
+      // open edit modale
+
+      // match dom title to array title
+
+      // fill edit modal inputs with array data
+
+      // edit array data to match new input data
+
+      // close modal
+
+      console.log('test')
+
+    }
   }
 })
 
