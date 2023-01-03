@@ -97,14 +97,6 @@ function createBookCard(title, author, imgsrc) {
   cardButtonContainer.appendChild(removeButton);
 }
 
-// Loops through the array and sets title and author for the DOM
-
-function bookCardLoop() {
-  for (let i = 0; i < library.length; i++) {
-    bookSearch(library[i].title, library[i].author);
-  }
-}
-
 // Book card read/unread toggle status
 
 document.addEventListener('click', e => {
@@ -131,12 +123,6 @@ document.addEventListener('click', e => {
 
     editModalBackground.style.display = 'flex';
 
-    editCloseBtn.addEventListener('click', () => {
-      editModalBackground.style.display = 'none';
-      editTitle.value = '';
-      editAuthor.value = '';
-    })
-
     for (i = 0; i < library.length; i++) {
       if (library[i].title == bookTitle.textContent) {
         editTitle.value = bookTitle.textContent;
@@ -144,8 +130,27 @@ document.addEventListener('click', e => {
       }
     }
 
+    editCloseBtn.addEventListener('click', () => {
+      editModalBackground.style.display = 'none';
+      editTitle.value = '';
+      editAuthor.value = '';
+    })
+
     editSubmitBtn.addEventListener('click', (e) => {
       e.preventDefault();
+
+      for (i = 0; i < library.length; i++) {
+        if (library[i].title == bookTitle.textContent) {
+          library[i].title = editTitle.value;
+          library[i].author = editAuthor.value;
+          library[i].imgsrc = '';
+          console.log(library[i])
+        }
+      }
+
+      editModalBackground.style.display = 'none';
+      editTitle.value = '';
+      editAuthor.value = '';
     })
 
     // edit array data to match new input data
@@ -191,7 +196,12 @@ function bookSearch(title, author) {
     library.push(book)
     createBookCard(title, author, imgsrc)
   })
+}
 
+function updateBooks() {
+  for (i = 0; i < library.length; i++) {
+    bookSearch(library[1].title, library[i].author)
+  }
 }
 
 bookSearch('Harry Potter and the Chamber of Secrets', 'J.K. Rowling');
