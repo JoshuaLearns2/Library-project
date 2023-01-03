@@ -10,6 +10,11 @@ function Book(title, author, imgsrc) {
   this.imgsrc = imgsrc;
 }
 
+function newBook(title, author) {
+  const book = new Book(title, author);
+  library.push(book);
+}
+
 // Adds functionality to the "Add a book" button by displaying the modal
 
 const addBookBtn = document.querySelector('.add-book-btn')
@@ -39,7 +44,8 @@ submitBookBtn.addEventListener('click', e => {
   title = document.querySelector('.title').value
   author = document.querySelector('.author').value
 
-  bookSearch(title, author);
+  newBook(title, author);
+  updateBooks();
 
   document.querySelector('.title').value = '';
   document.querySelector('.author').value = '';
@@ -144,7 +150,7 @@ document.addEventListener('click', e => {
           library[i].title = editTitle.value;
           library[i].author = editAuthor.value;
           library[i].imgsrc = '';
-          console.log(library[i])
+          updateBooks();
         }
       }
 
@@ -152,10 +158,6 @@ document.addEventListener('click', e => {
       editTitle.value = '';
       editAuthor.value = '';
     })
-
-    // edit array data to match new input data
-
-    // close modal
   }
 })
 
@@ -180,7 +182,7 @@ document.addEventListener('click', e => {
 
 // Retreive book cover images utilizing Open Library API
 
-function bookSearch(title, author) {
+function searchForImgSrc(title, author) {
   searchTitle = title.replace(/ /g, '+');
   
   let imgFinder =
@@ -192,18 +194,18 @@ function bookSearch(title, author) {
   }); 
   
   return imgFinder.then(() => {
-    const book = new Book(title, author, imgsrc)
-    library.push(book)
     createBookCard(title, author, imgsrc)
   })
 }
 
 function updateBooks() {
   for (i = 0; i < library.length; i++) {
-    bookSearch(library[1].title, library[i].author)
+    document.querySelector('.card-container').innerHTML = '';
+    searchForImgSrc(library[i].title, library[i].author);
   }
 }
 
-bookSearch('Harry Potter and the Chamber of Secrets', 'J.K. Rowling');
-bookSearch('1984', 'George Orwell');
-bookSearch('Alice in Wonderland', 'Lewis Carroll');
+newBook('Harry Potter and the Chamber of Secrets', 'J.K. Rowling');
+newBook('1984', 'George Orwell');
+newBook('Alice in Wonderland', 'Lewis Carroll');
+updateBooks();
