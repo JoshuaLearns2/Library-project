@@ -8,6 +8,8 @@ function Book(title, author, imgsrc) {
   this.title = title;
   this.author = author;
   this.imgsrc = imgsrc;
+
+  // create a method that searches for the imgsrc in the API and stores it as imgsrc in the object
 }
 
 function newBook(title, author) {
@@ -54,7 +56,7 @@ submitBookBtn.addEventListener('click', e => {
 
 // UI
 
-function createBookCard(title, author, imgsrc) {
+function createBookCard(title, author) {
   const cardContainer = document.querySelector('.card-container');
   const bookCard = document.createElement('div');
   bookCard.className = 'card-div';
@@ -65,7 +67,7 @@ function createBookCard(title, author, imgsrc) {
   bookCard.appendChild(cardCoverContainer);
   bookCover = document.createElement('img');
   bookCover.className = 'book-cover-img';
-  bookCover.src = imgsrc;
+  // bookCover.src = imgsrc;
   cardCoverContainer.appendChild(bookCover);
 
   const cardInfoContainer = document.createElement('div');
@@ -182,30 +184,27 @@ document.addEventListener('click', e => {
 
 // Retreive book cover images utilizing Open Library API
 
-function searchForImgSrc(title, author) {
-  searchTitle = title.replace(/ /g, '+');
-  
+function searchForImgSrc(title) {
   let imgFinder =
-  fetch('http://openlibrary.org/search.json?q=' + searchTitle)
-  .then(res => res.json())
-  .then(data => {
-    imgsrc = `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`
-    return imgsrc;
-  }); 
-  
+    fetch(`http://openlibrary.org/search.json?q=${title.replace(/ /g, '+')}`)
+    .then(res => res.json())
+    .then(data => {img = `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`})
+
   return imgFinder.then(() => {
-    createBookCard(title, author, imgsrc)
+    createBookCard()
   })
 }
 
 function updateBooks() {
+  document.querySelector('.card-container').innerHTML = '';
   for (i = 0; i < library.length; i++) {
-    document.querySelector('.card-container').innerHTML = '';
-    searchForImgSrc(library[i].title, library[i].author);
+    createBookCard(library[i].title, library[i].author);
   }
 }
 
 newBook('Harry Potter and the Chamber of Secrets', 'J.K. Rowling');
 newBook('1984', 'George Orwell');
-newBook('Alice in Wonderland', 'Lewis Carroll');
+newBook('Eloquent Javascript', 'Marijn Haverbeke');
 updateBooks();
+
+// searchForImgSrc('Harry Potter and the Chamber of Secrets')
