@@ -150,10 +150,10 @@ document.addEventListener('click', e => {
         if (library[i].title == bookTitle.textContent) {
           library[i].title = editTitle.value;
           library[i].author = editAuthor.value;
-          library[i].imgsrc = '';
+          library[i].imgsrc = undefined;
         }
       }
-
+      
       updateBooks();
       editModalBackground.style.display = 'none';
       editTitle.value = '';
@@ -183,18 +183,25 @@ document.addEventListener('click', e => {
 
 // Retreive book cover images utilizing Open Library API
 
-async function updateBooks() {
-  document.querySelector('.card-container').innerHTML = '';
-  for (i = 0; i < library.length; i++) {
-    await fetch(`http://openlibrary.org/search.json?q=${library[i].title.replace(/ /g, '+')}`)
+async function updateBooks(book) {
+    await fetch(`http://openlibrary.org/search.json?q=${book.title.replace(/ /g, '+')}`)
     .then(res => res.json())
-    .then(data => {img = `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`})
-    .then(() => library[i].imgsrc = img)
-    .then(() => createBookCard(library[i].title, library[i].author, library[i].imgsrc))
-  }
+    .then(data => {book.imgsrc = `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`})
+    .then(() => createBookCard(book.title, book.author, book.imgsrc))
 }
 
 newBook('Harry Potter and the Chamber of Secrets', 'J.K. Rowling');
 newBook('1984', 'George Orwell');
 newBook('Eloquent Javascript', 'Marijn Haverbeke');
-updateBooks();
+
+// FIX IMAGE WIDTHS FOR BOOK COVERS
+// FIX EDIT MODAL INPUT VALUE TO EXCLUDE "By" IN AUTHOR
+
+function loopTest() {
+  for (i = 0; i < library.length; i++) {
+    updateBooks(library[i])
+  }
+}
+
+loopTest();
+
