@@ -184,31 +184,33 @@ document.addEventListener('click', e => {
 
 // Retreive book cover images utilizing Open Library API
 
-function searchForImgSrc(book) {
-  let imgFinder =
-    fetch(`http://openlibrary.org/search.json?q=${book.title.replace(/ /g, '+')}`)
+async function updateBooks() {
+  for (i = 0; i < library.length; i++) {
+    await fetch(`http://openlibrary.org/search.json?q=${library[i].title.replace(/ /g, '+')}`)
     .then(res => res.json())
     .then(data => {img = `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`})
-    .then(() => book.imgsrc = img)
-    .then(() => updateBooks())
-}
-
-async function updateBooks() {
-  document.querySelector('.card-container').innerHTML = '';
-  for (i = 0; i < library.length; i++) {
-    createBookCard(library[i].title, library[i].author, library[i].imgsrc);
+    .then(() => library[i].imgsrc = img)
+    .then(() => createBookCard(library[i].title, library[i].author, library[i].imgsrc))
   }
 }
 
-function imgsrcCreator() {
-  for (i = 0; i < library.length; i++) {
-    searchForImgSrc(library[i])
-  }
-}
+// function updateBooks() {
+//   document.querySelector('.card-container').innerHTML = '';
+//   for (i = 0; i < library.length; i++) {
+//     console.log('2')
+//     createBookCard(library[i].title, library[i].author, library[i].imgsrc);
+//   }
+// }
+
+// function imgsrcCreator() {
+//   for (i = 0; i < library.length; i++) {
+//     searchForImgSrc(library[i])
+//   }
+// }
 
 newBook('Harry Potter and the Chamber of Secrets', 'J.K. Rowling');
 newBook('1984', 'George Orwell');
 newBook('Eloquent Javascript', 'Marijn Haverbeke');
-// updateBooks();
-imgsrcCreator();
-// searchForImgSrc();
+
+updateBooks();
+// imgsrcCreator();
