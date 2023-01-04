@@ -47,7 +47,7 @@ submitBookBtn.addEventListener('click', e => {
   author = document.querySelector('.author').value
 
   newBook(title, author);
-  updateBooks();
+  loopTest();
 
   document.querySelector('.title').value = '';
   document.querySelector('.author').value = '';
@@ -56,7 +56,7 @@ submitBookBtn.addEventListener('click', e => {
 
 // UI
 
-function createBookCard(title, author, imgsrc) {
+function createBookCard(title, author) {
   const cardContainer = document.querySelector('.card-container');
   const bookCard = document.createElement('div');
   bookCard.className = 'card-div';
@@ -67,7 +67,7 @@ function createBookCard(title, author, imgsrc) {
   bookCard.appendChild(cardCoverContainer);
   bookCover = document.createElement('img');
   bookCover.className = 'book-cover-img';
-  bookCover.src = imgsrc;
+  // bookCover.src = imgsrc;
   cardCoverContainer.appendChild(bookCover);
 
   const cardInfoContainer = document.createElement('div');
@@ -183,11 +183,11 @@ document.addEventListener('click', e => {
 
 // Retreive book cover images utilizing Open Library API
 
-async function updateBooks(book) {
-    await fetch(`http://openlibrary.org/search.json?q=${book.title.replace(/ /g, '+')}`)
+function updateBooks(book) {
+    fetch(`http://openlibrary.org/search.json?q=${book.title.replace(/ /g, '+')}`)
     .then(res => res.json())
-    .then(data => {book.imgsrc = `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`})
-    .then(() => createBookCard(book.title, book.author, book.imgsrc))
+    .then(data => book.imgsrc = `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`)
+    .then(() => document.querySelector('.book-cover-img').src = book.imgsrc)
 }
 
 newBook('Harry Potter and the Chamber of Secrets', 'J.K. Rowling');
@@ -199,9 +199,14 @@ newBook('Eloquent Javascript', 'Marijn Haverbeke');
 
 function loopTest() {
   for (i = 0; i < library.length; i++) {
-    updateBooks(library[i])
+    createBookCard(library[i].title, library[i].author)
   }
 }
 
-loopTest();
+window.addEventListener('load', () => {
+  updateBooks(library[0])
+  loopTest();
+})
+
+
 
