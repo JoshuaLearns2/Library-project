@@ -1,8 +1,8 @@
 // Creates an empty array for book data to be stored in
 
-library = [];
+library = JSON.parse(localStorage.getItem('books')) || [];
 
-// Object constructor for the book data
+// Factory function for book data
 
 function Book(title, author, imgsrc) {
   this.title = title;
@@ -34,7 +34,7 @@ closeModal.onclick = function() {
   modalBackground.style.display = "none";
 }
 
-// Adds functionality to the modal's submit button by passing the values into the DOM 
+// Add book modal submit button 
 
 const submitBookBtn = document.querySelector('.submit-book-btn')
 
@@ -113,7 +113,7 @@ document.addEventListener('click', e => {
   } 
 })
   
-// Book card edit button functionality which re-displays the modal to edit card's values
+// Book card edit button functionality which displays edit modal
   
 document.addEventListener('click', e => {
   if (e.target.matches('.edit-btn')) {
@@ -159,7 +159,7 @@ document.addEventListener('click', e => {
   }
 })
 
-// Book card remove button functionality
+// Book card remove button
 
 document.addEventListener('click', e => {
   if (e.target.matches('.remove-btn')) {
@@ -172,11 +172,14 @@ document.addEventListener('click', e => {
       if (bookCheck.title === title) {
         library.splice(i, 1);
         e.target.parentElement.parentElement.remove()
+        localStorage.setItem('books', JSON.stringify(library))
       }
     }
 
   }
 })
+
+// Updates the library array to contain Open Library API imgsrc for book covers and displays books to the DOM
 
 async function updateBooks() {
   document.querySelector('.card-container').innerHTML = '';
@@ -185,11 +188,15 @@ async function updateBooks() {
     const data = await res.json();
     book.imgsrc = await `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`;
     createBookCard(book.title, book.author, book.imgsrc)
+    localStorage.setItem('books', JSON.stringify(library))
   }
 }
 
-newBook('Harry Potter and the Chamber of Secrets', 'J.K. Rowling');
-newBook('1984', 'George Orwell');
-newBook('Eloquent Javascript', 'Marijn Haverbeke');
+// newBook('Harry Potter and the Chamber of Secrets', 'J.K. Rowling');
+// newBook('1984', 'George Orwell');
+// newBook('Eloquent Javascript', 'Marijn Haverbeke');
 
-window.addEventListener('load', updateBooks());
+
+window.addEventListener('load', () => {
+  updateBooks();
+});
