@@ -47,7 +47,7 @@ submitBookBtn.addEventListener('click', e => {
   author = document.querySelector('.author').value
 
   newBook(title, author);
-  loopTest();
+  updateOneBook(title, author)
 
   document.querySelector('.title').value = '';
   document.querySelector('.author').value = '';
@@ -180,6 +180,13 @@ document.addEventListener('click', e => {
 
   }
 })
+
+async function updateOneBook(title, author) {
+  const res = await fetch(`http://openlibrary.org/search.json?q=${title.replace(/ /g, '+')}`);
+  const data = await res.json();
+  imgsrc = await `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`;
+  createBookCard(title, author, imgsrc)
+}
 
 async function updateBooks() {
   for (const book of library) {
