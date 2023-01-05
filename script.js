@@ -8,8 +8,6 @@ function Book(title, author, imgsrc) {
   this.title = title;
   this.author = author;
   this.imgsrc = imgsrc;
-
-  // create a method that searches for the imgsrc in the API and stores it as imgsrc in the object
 }
 
 function newBook(title, author) {
@@ -47,7 +45,7 @@ submitBookBtn.addEventListener('click', e => {
   author = document.querySelector('.author').value
 
   newBook(title, author);
-  updateOneBook(title, author)
+  updateBooks();
 
   document.querySelector('.title').value = '';
   document.querySelector('.author').value = '';
@@ -151,13 +149,12 @@ document.addEventListener('click', e => {
           library[i].title = editTitle.value;
           library[i].author = editAuthor.value;
           library[i].imgsrc = undefined;
+          updateBooks();
+          editModalBackground.style.display = 'none';
+          editTitle.value = '';
+          editAuthor.value = '';
         }
       }
-      
-      updateBooks();
-      editModalBackground.style.display = 'none';
-      editTitle.value = '';
-      editAuthor.value = '';
     })
   }
 })
@@ -181,14 +178,8 @@ document.addEventListener('click', e => {
   }
 })
 
-async function updateOneBook(title, author) {
-  const res = await fetch(`http://openlibrary.org/search.json?q=${title.replace(/ /g, '+')}`);
-  const data = await res.json();
-  imgsrc = await `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`;
-  createBookCard(title, author, imgsrc)
-}
-
 async function updateBooks() {
+  document.querySelector('.card-container').innerHTML = '';
   for (const book of library) {
     const res = await fetch(`http://openlibrary.org/search.json?q=${book.title.replace(/ /g, '+')}`);
     const data = await res.json();
