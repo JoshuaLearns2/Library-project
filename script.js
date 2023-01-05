@@ -56,7 +56,7 @@ submitBookBtn.addEventListener('click', e => {
 
 // UI
 
-function createBookCard(title, author) {
+function createBookCard() {
   const cardContainer = document.querySelector('.card-container');
   const bookCard = document.createElement('div');
   bookCard.className = 'card-div';
@@ -67,7 +67,7 @@ function createBookCard(title, author) {
   bookCard.appendChild(cardCoverContainer);
   bookCover = document.createElement('img');
   bookCover.className = 'book-cover-img';
-  // bookCover.src = imgsrc;
+  bookCover.src = imgsrc;
   cardCoverContainer.appendChild(bookCover);
 
   const cardInfoContainer = document.createElement('div');
@@ -183,30 +183,16 @@ document.addEventListener('click', e => {
 
 // Retreive book cover images utilizing Open Library API
 
-function updateBooks(book) {
-    fetch(`http://openlibrary.org/search.json?q=${book.title.replace(/ /g, '+')}`)
+async function updateBooks(book) {
+    const getData = await fetch(`http://openlibrary.org/search.json?q=${book.title.replace(/ /g, '+')}`)
     .then(res => res.json())
     .then(data => book.imgsrc = `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`)
-    .then(() => document.querySelector('.book-cover-img').src = book.imgsrc)
+
+    console.log(getData)
 }
 
 newBook('Harry Potter and the Chamber of Secrets', 'J.K. Rowling');
 newBook('1984', 'George Orwell');
 newBook('Eloquent Javascript', 'Marijn Haverbeke');
 
-// FIX IMAGE WIDTHS FOR BOOK COVERS
-// FIX EDIT MODAL INPUT VALUE TO EXCLUDE "By" IN AUTHOR
-
-function loopTest() {
-  for (i = 0; i < library.length; i++) {
-    createBookCard(library[i].title, library[i].author)
-  }
-}
-
-window.addEventListener('load', () => {
-  updateBooks(library[0])
-  loopTest();
-})
-
-
-
+window.addEventListener('load', library.forEach(book => updateBooks(book)));
