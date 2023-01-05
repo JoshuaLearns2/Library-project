@@ -183,12 +183,16 @@ document.addEventListener('click', e => {
 
 // Retreive book cover images utilizing Open Library API
 
-async function updateBooks(book) {
-    const getData = await fetch(`http://openlibrary.org/search.json?q=${book.title.replace(/ /g, '+')}`)
-    .then(res => res.json())
-    .then(data => book.imgsrc = `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`)
+// async function updateBooks(book) {
+//   const getData = await fetch(`http://openlibrary.org/search.json?q=${book.title.replace(/ /g, '+')}`)
+//   .then(res => res.json())
+//   .then(data => book.imgsrc = `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`)
+// }
 
-    console.log(getData)
+async function updateBooks(book) {
+  const res = await fetch(`http://openlibrary.org/search.json?q=${book.title.replace(/ /g, '+')}`)
+  const data = await res.json()
+  return library.forEach(book => book.imgsrc = `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`)
 }
 
 newBook('Harry Potter and the Chamber of Secrets', 'J.K. Rowling');
