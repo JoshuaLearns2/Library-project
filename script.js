@@ -154,6 +154,8 @@ document.addEventListener('click', e => {
 
     editCloseBtn.addEventListener('click', () => {
       editModalBackground.style.display = 'none';
+      editTitle.style.border = 'none';
+      editAuthor.style.border = 'none';
       editTitle.value = '';
       editAuthor.value = '';
     })
@@ -165,7 +167,19 @@ document.addEventListener('click', e => {
           library[i].title = editTitle.value;
           library[i].author = editAuthor.value;
           library[i].imgsrc = undefined;
+        } if (editTitle.value === '' && editAuthor.value === '') {
+          editTitle.style.border = '2px solid red';
+          editAuthor.style.border = '2px solid red';
+        } else if (editTitle.value === '') {
+          editAuthor.style.border = 'none';
+          editTitle.style.border = '2px solid red';
+        } else if (editAuthor.value === '') {
+          editTitle.style.border = 'none';
+          editAuthor.style.border = '2px solid red';
+        } else {
           updateBooks();
+          editTitle.style.border = 'none';
+          editAuthor.style.border = 'none';
           editModalBackground.style.display = 'none';
           editTitle.value = '';
           editAuthor.value = '';
