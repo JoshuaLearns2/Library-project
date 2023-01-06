@@ -131,8 +131,8 @@ document.addEventListener('click', e => {
 
     for (i = 0; i < library.length; i++) {
       if (library[i].title == bookTitle.textContent) {
-        editTitle.value = bookTitle.textContent;
-        editAuthor.value = bookAuthor.textContent;
+        editTitle.value = library[i].title;
+        editAuthor.value = library[i].author;
       }
     }
 
