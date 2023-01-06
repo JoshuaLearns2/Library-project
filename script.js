@@ -142,50 +142,45 @@ document.addEventListener('click', e => {
     editForm = document.querySelector('.edit-modal-form');
     editTitle = document.querySelector('.edit-title');
     editAuthor = document.querySelector('.edit-author');
-
+    
     editModalBackground.style.display = 'flex';
 
     for (i = 0; i < library.length; i++) {
-      if (library[i].title == bookTitle.textContent) {
+      if (bookTitle.textContent === library[i].title) {
         editTitle.value = library[i].title;
         editAuthor.value = library[i].author;
-      }
-    }
 
-    editCloseBtn.addEventListener('click', () => {
-      editModalBackground.style.display = 'none';
-      editTitle.style.border = 'none';
-      editAuthor.style.border = 'none';
-      editTitle.value = '';
-      editAuthor.value = '';
-    })
-
-    editSubmitBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      for (i = 0; i < library.length; i++) {
-        if (library[i].title == bookTitle.textContent) {
-          library[i].title = editTitle.value;
-          library[i].author = editAuthor.value;
-          library[i].imgsrc = undefined;
-        } if (editTitle.value === '' && editAuthor.value === '') {
-          editTitle.style.border = '2px solid red';
-          editAuthor.style.border = '2px solid red';
-        } else if (editTitle.value === '') {
-          editAuthor.style.border = 'none';
-          editTitle.style.border = '2px solid red';
-        } else if (editAuthor.value === '') {
-          editTitle.style.border = 'none';
-          editAuthor.style.border = '2px solid red';
-        } else {
-          updateBooks();
-          editTitle.style.border = 'none';
-          editAuthor.style.border = 'none';
+        editCloseBtn.addEventListener('click', () => {
           editModalBackground.style.display = 'none';
-          editTitle.value = '';
-          editAuthor.value = '';
+          editTitle.style.border = 'none';
+          editAuthor.style.border = 'none';
+        })
+
+        editSubmitBtn.onclick = (e) => {
+          e.preventDefault();
+          for (const book of library) {
+            console.log('test')
+            if (editTitle.value === '' && editAuthor.value === '') {
+              editTitle.style.border = '2px solid red';
+              editAuthor.style.border = '2px solid red';
+            } else if (editTitle.value === '') {
+              editAuthor.style.border = 'none';
+              editTitle.style.border = '2px solid red';
+            } else if (editAuthor.value === '') {
+              editTitle.style.border = 'none';
+              editAuthor.style.border = '2px solid red';
+            } else {
+              book.title = editTitle.value;
+              book.author = editAuthor.value;
+              updateBooks();
+              editTitle.style.border = 'none';
+              editAuthor.style.border = 'none';
+              editModalBackground.style.display = 'none';
+            }
+          }
         }
       }
-    })
+    }
   }
 })
 
@@ -199,7 +194,7 @@ document.addEventListener('click', e => {
     for (let i = 0; i < library.length; i++) {
       const bookCheck = library[i]
 
-      if (bookCheck.title === title || bookCheck.title === '') {
+      if (bookCheck.title === title) {
         library.splice(i, 1);
         e.target.parentElement.parentElement.remove()
         localStorage.setItem('books', JSON.stringify(library))
@@ -217,15 +212,10 @@ async function updateBooks() {
     const res = await fetch(`http://openlibrary.org/search.json?q=${book.title.replace(/ /g, '+')}`);
     const data = await res.json();
     book.imgsrc = await `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`;
-    createBookCard(book.title, book.author, book.imgsrc)
-    localStorage.setItem('books', JSON.stringify(library))
+    createBookCard(book.title, book.author, book.imgsrc);
+    localStorage.setItem('books', JSON.stringify(library));
   }
 }
-
-// newBook('Harry Potter and the Chamber of Secrets', 'J.K. Rowling');
-// newBook('1984', 'George Orwell');
-newBook('Eloquent Javascript', 'Marijn Haverbeke');
-
 
 window.addEventListener('load', () => {
   updateBooks();
