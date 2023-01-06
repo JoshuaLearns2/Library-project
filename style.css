@@ -222,6 +222,7 @@ button:hover {
 
 .book-cover-img {
   height: 180px;
+  max-width: 140px; 
 }
 
 .card-info-container {
