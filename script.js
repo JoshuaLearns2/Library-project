@@ -29,8 +29,13 @@ addBookBtn.onclick = function() {
 const closeModal = document.querySelector('.close-modal-btn')
 
 closeModal.onclick = function() {
-  document.querySelector('.title').value = '';
-  document.querySelector('.author').value = '';
+  title = document.querySelector('.title')
+  author = document.querySelector('.author')
+
+  title.style.border = 'none';
+  author.style.border = 'none';
+  title.value = '';
+  author.value = '';
   modalBackground.style.display = "none";
 }
 
@@ -40,16 +45,27 @@ const submitBookBtn = document.querySelector('.submit-book-btn')
 
 submitBookBtn.addEventListener('click', e => {
   e.preventDefault();
+  title = document.querySelector('.title')
+  author = document.querySelector('.author')
 
-  title = document.querySelector('.title').value
-  author = document.querySelector('.author').value
-
-  newBook(title, author);
-  updateBooks();
-
-  document.querySelector('.title').value = '';
-  document.querySelector('.author').value = '';
-  modalBackground.style.display = "none";
+  if (title.value === '' && author.value === '') {
+    title.style.border = '2px solid red';
+    author.style.border = '2px solid red';
+  } else if (title.value === '') {
+    author.style.border = 'none';
+    title.style.border = '2px solid red';
+  } else if (author.value === '') {
+    title.style.border = 'none';
+    author.style.border = '2px solid red';
+  } else {
+    newBook(title.value, author.value);
+    updateBooks();
+    title.style.border = 'none';
+    author.style.border = 'none';
+    title.value = '';
+    author.value = '';
+    modalBackground.style.display = "none";
+  }
 })
 
 // UI
@@ -169,7 +185,7 @@ document.addEventListener('click', e => {
     for (let i = 0; i < library.length; i++) {
       const bookCheck = library[i]
 
-      if (bookCheck.title === title) {
+      if (bookCheck.title === title || bookCheck.title === '') {
         library.splice(i, 1);
         e.target.parentElement.parentElement.remove()
         localStorage.setItem('books', JSON.stringify(library))
@@ -194,7 +210,7 @@ async function updateBooks() {
 
 // newBook('Harry Potter and the Chamber of Secrets', 'J.K. Rowling');
 // newBook('1984', 'George Orwell');
-// newBook('Eloquent Javascript', 'Marijn Haverbeke');
+newBook('Eloquent Javascript', 'Marijn Haverbeke');
 
 
 window.addEventListener('load', () => {
