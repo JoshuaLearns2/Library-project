@@ -48,18 +48,28 @@ submitBookBtn.onclick = (e) => {
   title = document.querySelector('.title')
   author = document.querySelector('.author')
 
-  if (title.value === '' && author.value === '') {
+  if (title.value == 0 && author.value == 0) {
     title.style.border = '2px solid red';
     author.style.border = '2px solid red';
-  } else if (title.value === '') {
-    author.style.border = 'none';
+  } else if (title.value == 0) {
     title.style.border = '2px solid red';
-  } else if (author.value === '') {
-    title.style.border = 'none';
+  } else if (author.value == 0) {
     author.style.border = '2px solid red';
-  } else {
-    newBook(title.value, author.value);
-    updateBooks();
+  } else if ((title.value != 0 && author.value != 0)) {
+    if (library.length == 0) {
+      newBook(title.value, author.value);
+      updateBooks();
+    } else if (library.length != 0) {
+      for (i = 0; i < library.length; i++) {
+        if (title.value === library[i].title) {
+          console.log('test')
+          prompt('This book is already in your library');
+        } else {
+          newBook(title.value, author.value);
+          updateBooks();
+        }
+      }  
+    }
     title.style.border = 'none';
     author.style.border = 'none';
     title.value = '';
@@ -215,9 +225,3 @@ async function updateBooks() {
     localStorage.setItem('books', JSON.stringify(library));
   }
 }
-
-window.addEventListener('load', () => {
-  for (const book of library) {
-    createBookCard(book.title, book.author, book.imgsrc);
-  }
-})
