@@ -43,7 +43,7 @@ closeModal.onclick = function() {
 
 const submitBookBtn = document.querySelector('.submit-book-btn')
 
-submitBookBtn.addEventListener('click', e => {
+submitBookBtn.onclick = (e) => {
   e.preventDefault();
   title = document.querySelector('.title')
   author = document.querySelector('.author')
@@ -66,7 +66,7 @@ submitBookBtn.addEventListener('click', e => {
     author.value = '';
     modalBackground.style.display = "none";
   }
-})
+}
 
 // UI
 
@@ -159,7 +159,6 @@ document.addEventListener('click', e => {
         editSubmitBtn.onclick = (e) => {
           e.preventDefault();
           for (const book of library) {
-            console.log('test')
             if (editTitle.value === '' && editAuthor.value === '') {
               editTitle.style.border = '2px solid red';
               editAuthor.style.border = '2px solid red';
@@ -218,5 +217,7 @@ async function updateBooks() {
 }
 
 window.addEventListener('load', () => {
-  updateBooks();
-});
+  for (const book of library) {
+    createBookCard(book.title, book.author, book.imgsrc);
+  }
+})
