@@ -48,11 +48,14 @@ submitBookBtn.onclick = (e) => {
   title = document.querySelector('.title').value;
   author = document.querySelector('.author').value;
 
-  library.some(book => console.log(book.title));
-  newBook(title, author);
-  updateBooks();
+  if (library.some(book => book.title === title) === true) {
+    alert('This book already exists in your library')
+  } else {
+    newBook(title, author);
+    updateBooks();
+    modalBackground.style.display = 'none';
+  }
 
-  modalBackground.style.display = 'none';
 } 
 
 // UI
