@@ -36,7 +36,7 @@ closeModal.onclick = function() {
   author.style.border = 'none';
   title.value = '';
   author.value = '';
-  modalBackground.style.display = "none";
+  modalBackground.style.display = 'none';
 }
 
 // Add book modal submit button 
@@ -45,38 +45,15 @@ const submitBookBtn = document.querySelector('.submit-book-btn')
 
 submitBookBtn.onclick = (e) => {
   e.preventDefault();
-  title = document.querySelector('.title')
-  author = document.querySelector('.author')
+  title = document.querySelector('.title').value;
+  author = document.querySelector('.author').value;
 
-  if (title.value == 0 && author.value == 0) {
-    title.style.border = '2px solid red';
-    author.style.border = '2px solid red';
-  } else if (title.value == 0) {
-    title.style.border = '2px solid red';
-  } else if (author.value == 0) {
-    author.style.border = '2px solid red';
-  } else if ((title.value != 0 && author.value != 0)) {
-    if (library.length == 0) {
-      newBook(title.value, author.value);
-      updateBooks();
-    } else if (library.length != 0) {
-      for (i = 0; i < library.length; i++) {
-        if (title.value === library[i].title) {
-          console.log('test')
-          prompt('This book is already in your library');
-        } else {
-          newBook(title.value, author.value);
-          updateBooks();
-        }
-      }  
-    }
-    title.style.border = 'none';
-    author.style.border = 'none';
-    title.value = '';
-    author.value = '';
-    modalBackground.style.display = "none";
-  }
-}
+  library.some(book => console.log(book.title));
+  newBook(title, author);
+  updateBooks();
+
+  modalBackground.style.display = 'none';
+} 
 
 // UI
 
