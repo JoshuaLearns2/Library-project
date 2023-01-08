@@ -45,14 +45,31 @@ const submitBookBtn = document.querySelector('.submit-book-btn')
 
 submitBookBtn.onclick = (e) => {
   e.preventDefault();
-  title = document.querySelector('.title').value;
-  author = document.querySelector('.author').value;
+  title = document.querySelector('.title');
+  author = document.querySelector('.author');
 
-  if (library.some(book => book.title === title) === true) {
+  if (title.value === '' && author.value === '') {
+    title.style.border = '2px solid red';
+    author.style.border = '2px solid red';
+  } else if (title.value === '') {
+    author.style.border = 'none';
+    title.style.border = '2px solid red';
+  } else if (author.value === '') {
+    title.style.border = 'none';
+    author.style.border = '2px solid red';
+  } else if (library.some(book => book.title === title.value) === true) {
     alert('This book already exists in your library')
+    title.style.border = 'none';
+    author.style.border = 'none'
+    title.value = '';
+    author.value = '';
   } else {
-    newBook(title, author);
+    newBook(title.value, author.value);
     updateBooks();
+    title.style.border = 'none';
+    author.style.border = 'none'
+    title.value = '';
+    author.value = '';
     modalBackground.style.display = 'none';
   }
 
