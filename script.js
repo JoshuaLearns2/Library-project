@@ -213,12 +213,11 @@ document.addEventListener('click', e => {
 // Updates the library array to contain Open Library API imgsrc for book covers and displays books to the DOM
 
 async function updateBooks() {
-  document.querySelector('.card-container').innerHTML = '';
-  for (const book of library) {
-    const res = await fetch(`http://openlibrary.org/search.json?q=${book.title.replace(/ /g, '+')}`);
-    const data = await res.json();
-    book.imgsrc = await `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`;
-    createBookCard(book.title, book.author, book.imgsrc);
-    localStorage.setItem('books', JSON.stringify(library));
-  }
+  let i = library.length - 1;
+  let book = library[i]
+  const res = await fetch(`http://openlibrary.org/search.json?q=${book.title.replace(/ /g, '+')}`);
+  const data = await res.json();
+  book.imgsrc = await `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`;
+  createBookCard(book.title, book.author, book.imgsrc);
+  localStorage.setItem('books', JSON.stringify(library));
 }
