@@ -1,6 +1,6 @@
 // Creates an empty array for book data to be stored in
 
-library = JSON.parse(localStorage.getItem('books')) || [];
+const library = [];
 
 // Factory function for book data
 
@@ -10,8 +10,8 @@ function Book(title, author, imgsrc) {
   this.imgsrc = imgsrc;
 }
 
-function newBook(title, author) {
-  const book = new Book(title, author);
+function newBook(title, author, imgsrc) {
+  const book = new Book(title, author, imgsrc);
   library.push(book);
 }
 
@@ -64,8 +64,8 @@ submitBookBtn.onclick = (e) => {
     title.value = '';
     author.value = '';
   } else {
-    newBook(title.value, author.value);
-    updateBooks();
+    // newBook(title.value, author.value);
+    updateBooks(title.value, author.value);
     title.style.border = 'none';
     author.style.border = 'none'
     title.value = '';
@@ -143,6 +143,7 @@ document.addEventListener('click', e => {
     
     bookTitle = e.target.parentElement.parentElement.querySelector('.book-heading');
     bookAuthor = e.target.parentElement.parentElement.querySelector('.book-author');
+    bookCoverImg = e.target.parentElement.parentElement.querySelector('.book-cover-img');
     editModalBackground = document.querySelector('.edit-modal-background');
     editCloseBtn = document.querySelector('.close-edit-modal-btn');
     editSubmitBtn = document.querySelector('.edit-submit-book-btn');
@@ -152,41 +153,34 @@ document.addEventListener('click', e => {
     
     editModalBackground.style.display = 'flex';
 
-    for (i = 0; i < library.length; i++) {
-      if (bookTitle.textContent === library[i].title) {
-        editTitle.value = library[i].title;
-        editAuthor.value = library[i].author;
+    editTitle.value = bookTitle.innerText;
+    editAuthor.value = bookAuthor.innerText.replace(/By /g, '');
 
-        editCloseBtn.addEventListener('click', () => {
-          editModalBackground.style.display = 'none';
-          editTitle.style.border = 'none';
-          editAuthor.style.border = 'none';
-        })
+    editCloseBtn.addEventListener('click', () => {
+      editModalBackground.style.display = 'none';
+      editTitle.style.border = 'none';
+      editAuthor.style.border = 'none';
+    })
 
-        editSubmitBtn.onclick = (e) => {
-          e.preventDefault();
-          for (const book of library) {
-            if (editTitle.value === '' && editAuthor.value === '') {
-              editTitle.style.border = '2px solid red';
-              editAuthor.style.border = '2px solid red';
-            } else if (editTitle.value === '') {
-              editAuthor.style.border = 'none';
-              editTitle.style.border = '2px solid red';
-            } else if (editAuthor.value === '') {
-              editTitle.style.border = 'none';
-              editAuthor.style.border = '2px solid red';
-            } else {
-              book.title = editTitle.value;
-              book.author = editAuthor.value;
-              updateBooks();
-              editTitle.style.border = 'none';
-              editAuthor.style.border = 'none';
-              editModalBackground.style.display = 'none';
-            }
-          }
-        }
+    editSubmitBtn.addEventListener('click', e => {
+      e.preventDefault();
+      imgsrcFinder(editTitle.value);
+      editModalBackground.style.display = 'none';
+      editTitle.style.border = 'none';
+      editAuthor.style.border = 'none';
+
+      async function imgsrcFinder(title) {
+        const res = await fetch(`http://openlibrary.org/search.json?q=${title.replace(/ /g, '+')}`);
+        const data = await res.json();
+        imgsrc = await `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`;
+      
+        title = editTitle.value;
+        author = editAuthor.value;
+        bookTitle.innerText = title;
+        bookAuthor.innerText = `By ${author}`;
+        bookCoverImg.src = imgsrc;
       }
-    }
+    })
   }
 })
 
@@ -198,12 +192,12 @@ document.addEventListener('click', e => {
     const title = e.target.parentElement.parentElement.querySelector('.book-heading').textContent;
 
     for (let i = 0; i < library.length; i++) {
-      const bookCheck = library[i]
+      const bookCheck = library[i];
 
       if (bookCheck.title === title) {
         library.splice(i, 1);
-        e.target.parentElement.parentElement.remove()
-        localStorage.setItem('books', JSON.stringify(library))
+        e.target.parentElement.parentElement.remove();
+        localStorage.setItem('books', JSON.stringify(library));
       }
     }
 
@@ -212,12 +206,11 @@ document.addEventListener('click', e => {
 
 // Updates the library array to contain Open Library API imgsrc for book covers and displays books to the DOM
 
-async function updateBooks() {
-  let i = library.length - 1;
-  let book = library[i]
-  const res = await fetch(`http://openlibrary.org/search.json?q=${book.title.replace(/ /g, '+')}`);
+async function updateBooks(title, author) {
+  const res = await fetch(`http://openlibrary.org/search.json?q=${title.replace(/ /g, '+')}`);
   const data = await res.json();
-  book.imgsrc = await `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`;
-  createBookCard(book.title, book.author, book.imgsrc);
-  localStorage.setItem('books', JSON.stringify(library));
+  imgsrc = await `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`;
+  newBook(title, author, imgsrc);
+  createBookCard(title, author, imgsrc);
+  // localStorage.setItem('books', JSON.stringify(library));
 }
