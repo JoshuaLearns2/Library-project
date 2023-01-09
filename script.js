@@ -163,26 +163,43 @@ document.addEventListener('click', e => {
 
     editSubmitBtn.addEventListener('click', e => {
       e.preventDefault();
-      
-      for (let i = 0; i < library.length; i++) {
-        if (library[i].title === bookTitle.innerText) {
-          imgsrcFinder(editTitle.value);
-          editModalBackground.style.display = 'none';
-          editTitle.style.border = 'none';
-          editAuthor.style.border = 'none';
 
-          async function imgsrcFinder(title) {
-            const res = await fetch(`http://openlibrary.org/search.json?q=${title.replace(/ /g, '+')}`);
-            const data = await res.json();
-            imgsrc = await `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`;
-          
-            library[i].title = editTitle.value;
-            library[i].author = editAuthor.value;
-            library[i].imgsrc = imgsrc;
-
-            bookTitle.innerText = editTitle.value;
-            bookAuthor.innerText = `By ${editAuthor.value}`;
-            bookCoverImg.src = imgsrc;
+      if (editTitle.value === '' && editAuthor.value === '') {
+        editTitle.style.border = '2px solid red';
+        editAuthor.style.border = '2px solid red';
+      } else if (editTitle.value === '') {
+        editAuthor.style.border = 'none';
+        editTitle.style.border = '2px solid red';
+      } else if (editAuthor.value === '') {
+        editTitle.style.border = 'none';
+        editAuthor.style.border = '2px solid red';
+      } else if (library.some(book => book.title === editTitle.value) === true) {
+        alert('This book already exists in your library');
+        editTitle.style.border = 'none';
+        editAuthor.style.border = 'none'
+        editTitle.value = '';
+        editAuthor.value = '';
+      } else {
+        for (let i = 0; i < library.length; i++) {
+          if (library[i].title === bookTitle.innerText) {
+            imgsrcFinder(editTitle.value);
+            editModalBackground.style.display = 'none';
+            editTitle.style.border = 'none';
+            editAuthor.style.border = 'none';
+  
+            async function imgsrcFinder(title) {
+              const res = await fetch(`http://openlibrary.org/search.json?q=${title.replace(/ /g, '+')}`);
+              const data = await res.json();
+              imgsrc = await `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`;
+            
+              library[i].title = editTitle.value;
+              library[i].author = editAuthor.value;
+              library[i].imgsrc = imgsrc;
+  
+              bookTitle.innerText = editTitle.value;
+              bookAuthor.innerText = `By ${editAuthor.value}`;
+              bookCoverImg.src = imgsrc;
+            }
           }
         }
       }
