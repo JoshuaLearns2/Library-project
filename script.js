@@ -212,7 +212,7 @@ document.addEventListener('click', e => {
 document.addEventListener('click', e => {
   if (e.target.matches('.remove-btn')) {
     
-    const title = e.target.parentElement.parentElement.querySelector('.book-heading').textContent;
+    const title = e.target.parentElement.parentElement.querySelector('.book-title').textContent;
 
     for (let i = 0; i < library.length; i++) {
       const bookCheck = library[i];
