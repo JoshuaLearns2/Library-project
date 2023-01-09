@@ -96,7 +96,7 @@ function createBookCard(title, author, imgsrc) {
   bookCard.appendChild(cardInfoContainer);
   
   const bookTitle = document.createElement('h2');
-  bookTitle.className = 'book-heading';
+  bookTitle.className = 'book-title';
   bookTitle.textContent = title;
   cardInfoContainer.appendChild(bookTitle);
 
@@ -141,7 +141,7 @@ document.addEventListener('click', e => {
 document.addEventListener('click', e => {
   if (e.target.matches('.edit-btn')) {
     
-    bookTitle = e.target.parentElement.parentElement.querySelector('.book-heading');
+    bookTitle = e.target.parentElement.parentElement.querySelector('.book-title');
     bookAuthor = e.target.parentElement.parentElement.querySelector('.book-author');
     bookCoverImg = e.target.parentElement.parentElement.querySelector('.book-cover-img');
     editModalBackground = document.querySelector('.edit-modal-background');
@@ -164,22 +164,45 @@ document.addEventListener('click', e => {
 
     editSubmitBtn.addEventListener('click', e => {
       e.preventDefault();
-      imgsrcFinder(editTitle.value);
-      editModalBackground.style.display = 'none';
-      editTitle.style.border = 'none';
-      editAuthor.style.border = 'none';
-
-      async function imgsrcFinder(title) {
-        const res = await fetch(`http://openlibrary.org/search.json?q=${title.replace(/ /g, '+')}`);
-        const data = await res.json();
-        imgsrc = await `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`;
       
-        title = editTitle.value;
-        author = editAuthor.value;
-        bookTitle.innerText = title;
-        bookAuthor.innerText = `By ${author}`;
-        bookCoverImg.src = imgsrc;
+      for (let i = 0; i < library.length; i++) {
+        if (library[i].title === bookTitle.innerText) {
+          imgsrcFinder(editTitle.value);
+          editModalBackground.style.display = 'none';
+          editTitle.style.border = 'none';
+          editAuthor.style.border = 'none';
+
+          async function imgsrcFinder(title) {
+            const res = await fetch(`http://openlibrary.org/search.json?q=${title.replace(/ /g, '+')}`);
+            const data = await res.json();
+            imgsrc = await `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`;
+          
+            library[i].title = editTitle.value;
+            library[i].author = editAuthor.value;
+            library[i].imgsrc = imgsrc;
+
+            bookTitle.innerText = editTitle.value;
+            bookAuthor.innerText = `By ${editAuthor.value}`;
+            bookCoverImg.src = imgsrc;
+          }
+        }
       }
+      // imgsrcFinder(editTitle.value);
+      // editModalBackground.style.display = 'none';
+      // editTitle.style.border = 'none';
+      // editAuthor.style.border = 'none';
+
+      // async function imgsrcFinder(title) {
+      //   const res = await fetch(`http://openlibrary.org/search.json?q=${title.replace(/ /g, '+')}`);
+      //   const data = await res.json();
+      //   imgsrc = await `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`;
+      
+      //   title = editTitle.value;
+      //   author = editAuthor.value;
+      //   bookTitle.innerText = title;
+      //   bookAuthor.innerText = `By ${author}`;
+      //   bookCoverImg.src = imgsrc;
+      // }
     })
   }
 })
