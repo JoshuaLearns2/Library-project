@@ -1,8 +1,4 @@
-// Creates an empty array for book data to be stored in
-
-const library = [];
-
-// Factory function for book data
+const library = JSON.parse(localStorage.getItem('books')) || []
 
 function Book(title, author, imgsrc) {
   this.title = title;
@@ -15,16 +11,12 @@ function newBook(title, author, imgsrc) {
   library.push(book);
 }
 
-// Adds functionality to the "Add a book" button by displaying the modal
-
 const addBookBtn = document.querySelector('.add-book-btn')
 const modalBackground = document.querySelector('.modal-background')
 
 addBookBtn.onclick = function() {
   modalBackground.style.display = "flex";
 }
-
-// Adds functionality to the modal's close button
 
 const closeModal = document.querySelector('.close-modal-btn')
 
@@ -38,8 +30,6 @@ closeModal.onclick = function() {
   author.value = '';
   modalBackground.style.display = 'none';
 }
-
-// Add book modal submit button 
 
 const submitBookBtn = document.querySelector('.submit-book-btn')
 
@@ -65,6 +55,7 @@ submitBookBtn.onclick = (e) => {
     author.value = '';
   } else {
     updateBooks(title.value, author.value);
+    localStorage.setItem('books', JSON.stringify(library));
     title.style.border = 'none';
     author.style.border = 'none'
     title.value = '';
@@ -73,8 +64,6 @@ submitBookBtn.onclick = (e) => {
   }
 
 } 
-
-// UI
 
 function createBookCard(title, author, imgsrc) {
   const cardContainer = document.querySelector('.card-container');
@@ -125,8 +114,6 @@ function createBookCard(title, author, imgsrc) {
   cardButtonContainer.appendChild(removeButton);
 }
 
-// Book card read/unread toggle status
-
 document.addEventListener('click', e => {
   if (e.target.matches('.unread')) {
     e.target.className = 'read', e.target.textContent = 'Read'
@@ -134,8 +121,6 @@ document.addEventListener('click', e => {
     return e.target.className = 'unread', e.target.textContent = 'Unread'
   } 
 })
-  
-// Book card edit button functionality which displays edit modal
   
 document.addEventListener('click', e => {
   if (e.target.matches('.edit-btn')) {
@@ -195,10 +180,11 @@ document.addEventListener('click', e => {
               library[i].title = editTitle.value;
               library[i].author = editAuthor.value;
               library[i].imgsrc = imgsrc;
-  
+              
               bookTitle.innerText = editTitle.value;
               bookAuthor.innerText = `By ${editAuthor.value}`;
               bookCoverImg.src = imgsrc;
+              localStorage.setItem('books', JSON.stringify(library));
             }
           }
         }
@@ -206,8 +192,6 @@ document.addEventListener('click', e => {
     })
   }
 })
-
-// Book card remove button
 
 document.addEventListener('click', e => {
   if (e.target.matches('.remove-btn')) {
@@ -227,13 +211,15 @@ document.addEventListener('click', e => {
   }
 })
 
-// Updates the library array to contain Open Library API imgsrc for book covers and displays books to the DOM
-
 async function updateBooks(title, author) {
   const res = await fetch(`http://openlibrary.org/search.json?q=${title.replace(/ /g, '+')}`);
   const data = await res.json();
   imgsrc = await `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`;
   newBook(title, author, imgsrc);
   createBookCard(title, author, imgsrc);
-  // localStorage.setItem('books', JSON.stringify(library));
+  localStorage.setItem('books', JSON.stringify(library));
 }
+
+window.addEventListener('load', () => {
+  library.forEach(book => createBookCard(book.title, book.author, book.imgsrc));
+})
