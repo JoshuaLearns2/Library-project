@@ -64,7 +64,6 @@ submitBookBtn.onclick = (e) => {
     title.value = '';
     author.value = '';
   } else {
-    // newBook(title.value, author.value);
     updateBooks(title.value, author.value);
     title.style.border = 'none';
     author.style.border = 'none'
@@ -187,22 +186,6 @@ document.addEventListener('click', e => {
           }
         }
       }
-      // imgsrcFinder(editTitle.value);
-      // editModalBackground.style.display = 'none';
-      // editTitle.style.border = 'none';
-      // editAuthor.style.border = 'none';
-
-      // async function imgsrcFinder(title) {
-      //   const res = await fetch(`http://openlibrary.org/search.json?q=${title.replace(/ /g, '+')}`);
-      //   const data = await res.json();
-      //   imgsrc = await `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`;
-      
-      //   title = editTitle.value;
-      //   author = editAuthor.value;
-      //   bookTitle.innerText = title;
-      //   bookAuthor.innerText = `By ${author}`;
-      //   bookCoverImg.src = imgsrc;
-      // }
     })
   }
 })
