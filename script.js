@@ -122,14 +122,6 @@ function createBookCard(title, author, imgsrc, readStatus) {
   cardButtonContainer.appendChild(removeButton);
 }
 
-// document.addEventListener('click', e => {
-//   if (e.target.matches('.unread')) {
-//     e.target.className = 'read', e.target.textContent = 'Read'
-//   } else if (e.target.matches('.read')) {
-//     return e.target.className = 'unread', e.target.textContent = 'Unread'
-//   } 
-// })
-
 document.addEventListener('click', e => {
   if (e.target.matches('.unread') || (e.target.matches('.read'))) {
     bookTitle = e.target.parentElement.parentElement.querySelector('.book-title').textContent;
@@ -251,5 +243,3 @@ async function updateBooks(title, author, readStatus) {
 window.addEventListener('load', () => {
   library.forEach(book => createBookCard(book.title, book.author, book.imgsrc, book.readStatus));
 })
-
-// iterate through library and match the e.target to the book title. change the readStatus
