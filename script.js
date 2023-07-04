@@ -1,13 +1,14 @@
 const library = JSON.parse(localStorage.getItem('books')) || []
 
-function Book(title, author, imgsrc) {
+function Book(title, author, imgsrc, readStatus) {
   this.title = title;
   this.author = author;
   this.imgsrc = imgsrc;
+  this.readStatus = readStatus;
 }
 
-function newBook(title, author, imgsrc) {
-  const book = new Book(title, author, imgsrc);
+function newBook(title, author, imgsrc, readStatus) {
+  const book = new Book(title, author, imgsrc, readStatus);
   library.push(book);
 }
 
@@ -37,6 +38,7 @@ submitBookBtn.onclick = (e) => {
   e.preventDefault();
   title = document.querySelector('.title');
   author = document.querySelector('.author');
+  readStatus = false;
 
   if (title.value === '' && author.value === '') {
     title.style.border = '2px solid red';
@@ -54,7 +56,7 @@ submitBookBtn.onclick = (e) => {
     title.value = '';
     author.value = '';
   } else {
-    updateBooks(title.value, author.value);
+    updateBooks(title.value, author.value, readStatus);
     localStorage.setItem('books', JSON.stringify(library));
     title.style.border = 'none';
     author.style.border = 'none'
@@ -65,7 +67,7 @@ submitBookBtn.onclick = (e) => {
 
 } 
 
-function createBookCard(title, author, imgsrc) {
+function createBookCard(title, author, imgsrc, readStatus) {
   const cardContainer = document.querySelector('.card-container');
   const bookCard = document.createElement('div');
   bookCard.className = 'card-div';
@@ -99,8 +101,14 @@ function createBookCard(title, author, imgsrc) {
 
   const readStatusButton = document.createElement('button');
   readStatusButton.id = 'read-status';
-  readStatusButton.className = 'unread';
-  readStatusButton.textContent = 'Unread';
+  if (readStatus === false) {
+    readStatusButton.className = 'unread';
+    readStatusButton.textContent = 'Unread';
+  } 
+  if (readStatus === true) {
+    readStatusButton.className = 'read';
+    readStatusButton.textContent = 'Read';
+  } 
   cardButtonContainer.appendChild(readStatusButton);
 
   const editButton = document.createElement('button');
@@ -114,11 +122,30 @@ function createBookCard(title, author, imgsrc) {
   cardButtonContainer.appendChild(removeButton);
 }
 
+// document.addEventListener('click', e => {
+//   if (e.target.matches('.unread')) {
+//     e.target.className = 'read', e.target.textContent = 'Read'
+//   } else if (e.target.matches('.read')) {
+//     return e.target.className = 'unread', e.target.textContent = 'Unread'
+//   } 
+// })
+
 document.addEventListener('click', e => {
-  if (e.target.matches('.unread')) {
-    e.target.className = 'read', e.target.textContent = 'Read'
-  } else if (e.target.matches('.read')) {
-    return e.target.className = 'unread', e.target.textContent = 'Unread'
+  if (e.target.matches('.unread') || (e.target.matches('.read'))) {
+    bookTitle = e.target.parentElement.parentElement.querySelector('.book-title').textContent;
+    library.map(book => {
+      if (book.title === bookTitle) {
+        if (e.target.className === 'unread') {
+          e.target.className = 'read';
+          e.target.innerText = 'Read';
+        } else if (e.target.className === 'read') {
+          e.target.className = 'unread';
+          e.target.innerText = 'Unread';
+        }
+        book.readStatus = !book.readStatus;
+        localStorage.setItem('books', JSON.stringify(library));
+      }
+    })
   } 
 })
   
@@ -211,15 +238,18 @@ document.addEventListener('click', e => {
   }
 })
 
-async function updateBooks(title, author) {
+async function updateBooks(title, author, readStatus) {
+  console.log(readStatus);
   const res = await fetch(`http://openlibrary.org/search.json?q=${title.replace(/ /g, '+')}`);
   const data = await res.json();
   imgsrc = await `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`;
-  newBook(title, author, imgsrc);
-  createBookCard(title, author, imgsrc);
+  newBook(title, author, imgsrc, readStatus);
+  createBookCard(title, author, imgsrc, readStatus);
   localStorage.setItem('books', JSON.stringify(library));
 }
 
 window.addEventListener('load', () => {
-  library.forEach(book => createBookCard(book.title, book.author, book.imgsrc));
+  library.forEach(book => createBookCard(book.title, book.author, book.imgsrc, book.readStatus));
 })
+
+// iterate through library and match the e.target to the book title. change the readStatus
