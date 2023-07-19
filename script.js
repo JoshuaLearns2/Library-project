@@ -1,4 +1,18 @@
-const library = JSON.parse(localStorage.getItem('books')) || []
+const library = JSON.parse(localStorage.getItem('books')) || [];
+const userList = [];
+
+const signUpBtn = document.querySelector('.signup-button');
+const logInBtn = document.querySelector('.login-button');
+const signUpFormBtn = document.querySelector('.signup-form-btn');
+const logInFormBtn = document.querySelector('.login-form-btn');
+const addBookBtn = document.querySelector('.add-book-btn');
+const modalBackground = document.querySelector('.modal-background');
+const signUpBackground = document.querySelector('.signup-modal-background');
+const logInBackground = document.querySelector('.login-modal-background');
+const closeModal = document.querySelector('.close-modal-btn');
+const closeSignUpModal = document.querySelector('.close-signup-modal-btn');
+const closeLogInModal = document.querySelector('.close-login-modal-btn');
+const submitBookBtn = document.querySelector('.submit-book-btn');
 
 function Book(title, author, imgsrc, readStatus) {
   this.title = title;
@@ -7,19 +21,57 @@ function Book(title, author, imgsrc, readStatus) {
   this.readStatus = readStatus;
 }
 
+function User(username, email, password) {
+  this.username = username,
+  this.email = email,
+  this.password = password
+}
+
 function newBook(title, author, imgsrc, readStatus) {
   const book = new Book(title, author, imgsrc, readStatus);
   library.push(book);
 }
 
-const addBookBtn = document.querySelector('.add-book-btn')
-const modalBackground = document.querySelector('.modal-background')
+function newUser(username, email, password) {
+  const user = new User(username, email, password);
+  userList.push(user);
+}
+
+signUpBtn.addEventListener('click', () => {
+  signUpBackground.style.display = "flex";
+})
+
+logInBtn.addEventListener('click', () => {
+  logInBackground.style.display = "flex";
+})
+
+signUpFormBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  const signupUsername = document.querySelector('#signup-username').value;
+  const signupEmail = document.querySelector('#signup-email').value;
+  const signupPassword = document.querySelector('#signup-password').value;
+  const signupConfirmPassword = document.querySelector('#signup-confirm-password').value;
+  
+  if (signupPassword === signupConfirmPassword) {
+    newUser(signupUsername, signupEmail, signupPassword);
+    
+    console.log(userList);
+  } else {
+    console.log('Password does not match')
+  } 
+})
+
+closeSignUpModal.onclick = function() {
+  signUpBackground.style.display = "none";
+}
+
+closeLogInModal.onclick = function() {
+  logInBackground.style.display = "none";
+}
 
 addBookBtn.onclick = function() {
   modalBackground.style.display = "flex";
 }
-
-const closeModal = document.querySelector('.close-modal-btn')
 
 closeModal.onclick = function() {
   title = document.querySelector('.title')
@@ -31,8 +83,6 @@ closeModal.onclick = function() {
   author.value = '';
   modalBackground.style.display = 'none';
 }
-
-const submitBookBtn = document.querySelector('.submit-book-btn')
 
 submitBookBtn.onclick = (e) => {
   e.preventDefault();
