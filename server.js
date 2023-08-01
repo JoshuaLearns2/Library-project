@@ -79,15 +79,16 @@ app.post('/api/library', (req, res) => {
     res.end();
 })
 
-app.put('/api/library', (req, res) => {
-    console.log('PUT firing successfully')
+app.put('/api/library/:id', async (req, res) => {
+    const { id } = req.params;
+    await Book.replaceOne({_id: id}, req.body);
+    res.end();
 })
 
 app.delete('/api/library/:id', async (req, res) => {
     const { id } = req.params;
-
-    const book = await Book.findByIdAndDelete(id)
-    res.status(201).json()
+    const book = await Book.findByIdAndDelete(id);
+    res.end();
 })
 
 app.post('/api/users', (req, res) => {

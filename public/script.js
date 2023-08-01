@@ -269,21 +269,31 @@ document.addEventListener('click', e => {
 
 document.addEventListener('click', e => {
   if (e.target.matches('.edit-btn')) {
-
-    bookTitle = e.target.parentElement.parentElement.querySelector('.book-title');
-    bookAuthor = e.target.parentElement.parentElement.querySelector('.book-author');
-    bookCoverImg = e.target.parentElement.parentElement.querySelector('.book-cover-img');
-    editModalBackground = document.querySelector('.edit-modal-background');
-    editCloseBtn = document.querySelector('.close-edit-modal-btn');
-    editSubmitBtn = document.querySelector('.edit-submit-book-btn');
-    editForm = document.querySelector('.edit-modal-form');
-    editTitle = document.querySelector('.edit-title');
-    editAuthor = document.querySelector('.edit-author');
+    let bookId;
+    let bookTitle = e.target.parentElement.parentElement.querySelector('.book-title');
+    let bookAuthor = e.target.parentElement.parentElement.querySelector('.book-author');
+    let bookCoverImg = e.target.parentElement.parentElement.querySelector('.book-cover-img');
+    let editModalBackground = document.querySelector('.edit-modal-background');
+    let editCloseBtn = document.querySelector('.close-edit-modal-btn');
+    let editSubmitBtn = document.querySelector('.edit-submit-book-btn');
+    let editForm = document.querySelector('.edit-modal-form');
+    let editTitle = document.querySelector('.edit-title');
+    let editAuthor = document.querySelector('.edit-author');
 
     editModalBackground.style.display = 'flex';
 
     editTitle.value = bookTitle.innerText;
     editAuthor.value = bookAuthor.innerText.replace(/By /g, '');
+
+    const getBookId = () => {
+      library.filter(book => {
+        if (book.title === bookTitle.innerText) {
+          bookId = book._id
+        } 
+      })
+    }
+
+    getBookId()
 
     editCloseBtn.addEventListener('click', () => {
       editModalBackground.style.display = 'none';
@@ -330,6 +340,23 @@ document.addEventListener('click', e => {
               bookAuthor.innerText = `By ${editAuthor.value}`;
               bookCoverImg.src = imgsrc;
 
+              const book = {
+                title: editTitle.value,
+                author: editAuthor.value,
+                imgsrc: imgsrc,
+                readStatus: false,
+                favoriteStatus: false
+              }
+
+              const options = {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json"
+                },
+                body: JSON.stringify(book),
+              }
+
+              fetch(`http://localhost:8080/api/library/${bookId}`, options)
               
               // localStorage.setItem('books', JSON.stringify(library));
             }
