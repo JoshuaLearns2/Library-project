@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library</title>
+  <link rel="icon" type="image/x-icon" href="/book-open-outline.png">
+  <link rel="stylesheet" href="style.css" />
+  <script src="./script.js" defer></script>
+</head>
+<body>
+  <div class="modal-background">
+    <div class="modal">
+      <div class="close-modal-container">
+        <button class="close-modal-btn">&times;</button>
+      </div>
+      <form class="modal-form">
+        <input type="text" class="title" placeholder="Add a title" aria-required="true"/>
+        <input type="text" class="author" placeholder="Add an author" aria-required="true"/>
+        <button class="submit-book-btn">Submit</button>
+      </form>
+    </div>
+  </div>
+  <div class="edit-modal-background">
+    <div class="edit-modal">
+      <div class="close-edit-modal-container">
+        <button class="close-edit-modal-btn">&times;</button>
+      </div>
+      <form class="edit-modal-form">
+        <input type="text" class="edit-title">
+        <input type="text" class="edit-author">
+        <button type="submit" class="edit-submit-book-btn">Edit</button>
+      </form>
+    </div>
+  </div>
+  <div class="signup-modal-background">
+    <div class="signup-modal">
+      <div class="close-signup-modal-container">
+        <button class="close-signup-modal-btn">&times;</button>
+      </div>
+      <form class="signup-modal-form">
+        <input name="username" type="text" id="signup-username" placeholder="Add a username">
+        <input name="email" type="email" id="signup-email" placeholder="Add an email">
+
+        <input name="password" type="password" id="signup-password" placeholder="Add a password">
+        <input type="password" id="signup-confirm-password" placeholder="Confirm password">
+        <button type="submit" class="signup-form-btn">Sign up</button>
+      </form>
+    </div>
+  </div>
+  <div class="login-modal-background">
+    <div class="login-modal">
+      <div class="close-login-modal-container">
+        <button class="close-login-modal-btn">&times;</button>
+      </div>
+      <form class="login-modal-form"  method="post">
+        <input type="text" id="login-username" placeholder="Username" required>
+        <input type="password" id="login-password" placeholder="Password" required>
+        <button type="submit" class="login-form-btn">Log in</button>
+      </form>
+    </div>
+  </div>
+  <header>
+    <a href="#" class="logo-link">
+      <div class="logo">
+        <svg style="width:48px;height:48px" viewBox="0 0 24 24">
+          <path fill="currentColor" d="M21,4H3A2,2 0 0,0 1,6V19A2,2 0 0,0 3,21H21A2,2 0 0,0 23,19V6A2,2 0 0,0 21,4M3,19V6H11V19H3M21,19H13V6H21V19M14,9.5H20V11H14V9.5M14,12H20V13.5H14V12M14,14.5H20V16H14V14.5Z" />
+        </svg>
+        <span class="logo-lettering">Library</span>
+      </div>
+    </a>
+    <nav class="nav-links">
+      <ul>
+        <a class="signup-button">
+          <li>Sign up</li>
+        </a>
+        <a class="login-button">
+          <li>Log in</li>
+        </a>
+      </ul>
+    </nav>
+  </header>
+  <main>
+    <div class="button-container">
+      <button class="add-book-btn">Add a book</button>
+    </div>
+    <div class="card-container"></div>
+    <div class="authorized-card-container">
+      <h1>Welcome to your personal profile page</h1>
+    </div>
+  </main>
+  <footer>
+    Copyright &copy; 2023 Joshua Meeks
+  </footer>
+</body>
+</html>
