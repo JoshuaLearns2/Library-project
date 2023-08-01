@@ -253,6 +253,7 @@ document.addEventListener('click', e => {
     bookTitle = e.target.parentElement.parentElement.querySelector('.book-title').textContent;
     library.map(book => {
       if (book.title === bookTitle) {
+        let bookId = book._id;
         if (e.target.className === 'unread') {
           e.target.className = 'read';
           e.target.innerText = 'Read';
@@ -261,7 +262,24 @@ document.addEventListener('click', e => {
           e.target.innerText = 'Unread';
         }
         book.readStatus = !book.readStatus;
-        localStorage.setItem('books', JSON.stringify(library));
+
+        let newBook = {
+          title: book.title,
+          author: book.author,
+          readStatus: book.readStatus,
+          favoriteStatus: false
+        }
+
+        const options = {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(book),
+        }
+
+        fetch(`http://localhost:8080/api/library/${bookId}`, options)
+        // localStorage.setItem('books', JSON.stringify(library));
       }
     })
   }
