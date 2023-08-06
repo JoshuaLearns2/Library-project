@@ -14,10 +14,30 @@ body {
   position: relative;
 }
 
-.modal-background,
+.loader {
+  color: #ffffff;
+  font-size: 2em;
+}
+
+.loader-spinner {
+  border: 16px solid #94a3b8; 
+  border-top: 16px solid #0ea5e9;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loader,
+.add-book-modal-background,
 .edit-modal-background,
-.signup-modal-background,
-.login-modal-background {
+.sign-up-modal-background,
+.log-in-modal-background {
   display: none;
   justify-content: center;
   padding-top: 10%;
@@ -29,25 +49,25 @@ body {
   height: 100%;
   overflow: auto;
   background-color: rgb(0, 0, 0);
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
-.modal,
-.edit-modal,
-.signup-modal,
-.login-modal {
+.add-book-modal,
+.edit-book-modal,
+.sign-up-modal,
+.log-in-modal {
   display: flex;
   flex-direction: column;
-  width: 400px;
-  height: 400px;
+  width: 300px;
+  height: 300px;
   background-color: #e2e8f0;
   color: #ffffff;
 }
 
 .modal-form,
 .edit-modal-form,
-.signup-modal-form,
-.login-modal-form {
+.sign-up-modal-form,
+.log-in-modal-form {
   display: flex;
   height: 80%;
   flex-direction: column;
@@ -55,10 +75,10 @@ body {
   align-items: center;
 }
 
-.close-modal-btn,
+.close-modal-button,
 .close-edit-modal-btn,
-.close-signup-modal-btn,
-.close-login-modal-btn {
+.close-sign-up-modal-btn,
+.close-log-in-modal-btn {
   width: 20px;
   height: 20px;
   background-color: #ef4444;
@@ -70,13 +90,13 @@ body {
 }
 
 .modal-form>input,
-.submit-book-btn,
+.submit-book-button,
 .edit-modal-form>input,
 .edit-submit-book-btn,
-.signup-modal-form>input,
-.signup-form-btn,
-.login-modal-form>input,
-.login-form-btn {
+.sign-up-modal-form>input,
+.sign-up-form-btn,
+.log-in-modal-form>input,
+.log-in-form-btn {
   width: 50%;
   height: 30px;
   margin: .5rem;
@@ -84,16 +104,16 @@ body {
 
 .modal-form>input,
 .edit-modal-form>input,
-.signup-modal-form>input,
-.login-modal-form>input {
+.sign-up-modal-form>input,
+.log-in-modal-form>input {
   padding-left: .5rem;
   border: none;
 }
 
-.submit-book-btn,
+.submit-book-button,
 .edit-submit-book-btn,
-.signup-form-btn,
-.login-form-btn {
+.sign-up-form-btn,
+.log-in-form-btn {
   background-color: #0ea5e9;
   color: #ffffff;
   border: none;
@@ -168,7 +188,7 @@ footer {
   padding: 2em;
 }
 
-.add-book-btn {
+.add-book-button {
   width: 150px;
   height: 30px;
   border: none;
@@ -192,19 +212,6 @@ button:hover {
   grid-template-columns: repeat(auto-fit, 300px);
   gap: 30px;
   padding-bottom: 5rem;
-}
-
-.authorized-card-container {
-  display: none;
-  justify-content: center;
-  /* grid-template-columns: repeat(auto-fit, 300px); */
-  gap: 30px;
-  padding-bottom: 5rem;
-}
-
-.authorized-card-container > h1 {
-  font-family: sans-serif;
-  color: #334155;
 }
 
 .card-div {

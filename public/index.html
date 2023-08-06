@@ -10,20 +10,21 @@
   <script src="./script.js" defer></script>
 </head>
 <body>
-  <div class="modal-background">
-    <div class="modal">
+  <div class="loader"><div class="loader-spinner"></div></div>
+  <div class="add-book-modal-background">
+    <div class="add-book-modal">
       <div class="close-modal-container">
-        <button class="close-modal-btn">&times;</button>
+        <button class="close-modal-button">&times;</button>
       </div>
       <form class="modal-form">
         <input type="text" class="title" placeholder="Add a title" aria-required="true"/>
         <input type="text" class="author" placeholder="Add an author" aria-required="true"/>
-        <button class="submit-book-btn">Submit</button>
+        <button class="submit-book-button">Submit</button>
       </form>
     </div>
   </div>
   <div class="edit-modal-background">
-    <div class="edit-modal">
+    <div class="edit-book-modal">
       <div class="close-edit-modal-container">
         <button class="close-edit-modal-btn">&times;</button>
       </div>
@@ -34,30 +35,30 @@
       </form>
     </div>
   </div>
-  <div class="signup-modal-background">
-    <div class="signup-modal">
-      <div class="close-signup-modal-container">
-        <button class="close-signup-modal-btn">&times;</button>
+  <div class="sign-up-modal-background">
+    <div class="sign-up-modal">
+      <div class="close-sign-up-modal-container">
+        <button class="close-sign-up-modal-btn">&times;</button>
       </div>
-      <form class="signup-modal-form">
-        <input name="username" type="text" id="signup-username" placeholder="Add a username">
-        <input name="email" type="email" id="signup-email" placeholder="Add an email">
+      <form class="sign-up-modal-form">
+        <input name="username" type="text" id="sign-up-username" placeholder="Add a username">
+        <input name="email" type="email" id="sign-up-email" placeholder="Add an email">
 
-        <input name="password" type="password" id="signup-password" placeholder="Add a password">
-        <input type="password" id="signup-confirm-password" placeholder="Confirm password">
-        <button type="submit" class="signup-form-btn">Sign up</button>
+        <input name="password" type="password" id="sign-up-password" placeholder="Add a password">
+        <input type="password" id="sign-up-confirm-password" placeholder="Confirm password">
+        <button type="submit" class="sign-up-form-btn">Sign up</button>
       </form>
     </div>
   </div>
-  <div class="login-modal-background">
-    <div class="login-modal">
-      <div class="close-login-modal-container">
-        <button class="close-login-modal-btn">&times;</button>
+  <div class="log-in-modal-background">
+    <div class="log-in-modal">
+      <div class="close-log-in-modal-container">
+        <button class="close-log-in-modal-btn">&times;</button>
       </div>
-      <form class="login-modal-form"  method="post">
-        <input type="text" id="login-username" placeholder="Username" required>
-        <input type="password" id="login-password" placeholder="Password" required>
-        <button type="submit" class="login-form-btn">Log in</button>
+      <form class="log-in-modal-form"  method="post">
+        <input type="text" id="log-in-username" placeholder="Username" required>
+        <input type="password" id="log-in-password" placeholder="Password" required>
+        <button type="submit" class="log-in-form-btn">Log in</button>
       </form>
     </div>
   </div>
@@ -72,10 +73,10 @@
     </a>
     <nav class="nav-links">
       <ul>
-        <a class="signup-button">
+        <a class="sign-up-button">
           <li>Sign up</li>
         </a>
-        <a class="login-button">
+        <a class="log-in-button">
           <li>Log in</li>
         </a>
       </ul>
@@ -83,12 +84,9 @@
   </header>
   <main>
     <div class="button-container">
-      <button class="add-book-btn">Add a book</button>
+      <button class="add-book-button">Add a book</button>
     </div>
     <div class="card-container"></div>
-    <div class="authorized-card-container">
-      <h1>Welcome to your personal profile page</h1>
-    </div>
   </main>
   <footer>
     Copyright &copy; 2023 Joshua Meeks

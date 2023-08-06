@@ -1,442 +1,210 @@
-const library = [];
-const userList = JSON.parse(localStorage.getItem('userlist')) || [];
-const userLoggedIn = JSON.parse(sessionStorage.getItem('userstatus')) || false;
-const signUpBtn = document.querySelector('.signup-button');
-const logInBtn = document.querySelector('.login-button');
-const signUpForm = document.querySelector('.signup-modal-form');
-const signUpFormBtn = document.querySelector('.signup-form-btn');
-const logInFormBtn = document.querySelector('.login-form-btn');
-const addBookBtn = document.querySelector('.add-book-btn');
-const modalBackground = document.querySelector('.modal-background');
-const signUpBackground = document.querySelector('.signup-modal-background');
-const logInBackground = document.querySelector('.login-modal-background');
-const closeModal = document.querySelector('.close-modal-btn');
-const closeSignUpModal = document.querySelector('.close-signup-modal-btn');
-const closeLogInModal = document.querySelector('.close-login-modal-btn');
-const submitBookBtn = document.querySelector('.submit-book-btn');
-const authorizedCardContainer = document.querySelector('.authorized-card-container');
-const cardContainer = document.querySelector('.card-container');
-const url = 'http://localhost:8080/api/library';
-
-async function getData() {
-  const response = await fetch(url);
-  const data = await response.json();
-  data.forEach(book => library.push(book));
-  console.log(library)  
-}
-
-getData()
-
-function Book(title, author, imgsrc, readStatus) {
-  this.title = title;
-  this.author = author;
-  this.imgsrc = imgsrc;
-  this.readStatus = readStatus;
-}
-
-function User(username, email, password) {
-  this.username = username,
-  this.email = email,
-  this.password = password
-}
-
-const newBook = async (title, author, imgsrc, readStatus, favoriteStatus) => {
-  const data = { title, author, imgsrc, readStatus, favoriteStatus }
-  const options = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data),
-  }
-
-  fetch('http://localhost:8080/api/library', options)
-}
-
-signUpForm.addEventListener('submit', (e) => {
-  e.preventDefault();
-  const username = document.querySelector('#signup-username').value;
-  const email = document.querySelector('#signup-email').value;
-  const password = document.querySelector('#signup-password').value;
-  const data = { username, email, password };
-
-  const options = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data),
-  }
-
-  fetch('http://localhost:8080/api/users', options)
+document.querySelector('.add-book-button').addEventListener('click', () => {
+  document.querySelector('.add-book-modal-background').style.display = 'flex'
 })
 
-const loggedIn = () => {
-  sessionStorage.setItem('userstatus', JSON.stringify(true));
-
-  signUpBtn.innerText = 'Profile';
-  logInBtn.innerText = 'Log out';
-
-  logInBtn.addEventListener('click', () => {
-    loggedOut();
-  })
-
-  authorizedCardContainer.style.display = 'grid';
-  cardContainer.style.display = 'none';
-}
-
-const loggedOut = () => {
-  logInBackground.style.display = 'none';
-  signUpBtn.innerText = 'Sign up';
-  logInBtn.innerText = 'Log in';
-
-  logInBtn.addEventListener('click', () => {
-    logInBackground.style.display = 'flex';
-  })
-
-  authorizedCardContainer.style.display = 'none';
-  cardContainer.style.display = 'grid';
-}
-
-signUpBtn.addEventListener('click', () => {
-  signUpBackground.style.display = "flex";
+document.querySelector('.close-modal-button').addEventListener('click', () => {
+  document.querySelector('.add-book-modal-background').style.display = 'none'
 })
 
-logInBtn.addEventListener('click', (e) => {
-  logInBackground.style.display = 'flex';
+document.querySelector('.sign-up-button').addEventListener('click', () => {
+  document.querySelector('.sign-up-modal-background').style.display = 'flex'
 })
 
-logInFormBtn.addEventListener('click', (e) => {
-  e.preventDefault();
-  let loginUsername = document.querySelector('#login-username');
-  let loginPassword = document.querySelector('#login-password');
-
-  if (loginUsername.value && loginPassword.value) {
-    for (let i = 0; i < userList.length; i++) {
-      if (loginUsername.value === userList[i].username) {
-        if (loginPassword.value === userList[i].password) {
-          loginUsername.value = '';
-          loginPassword.value = '';
-          logInBackground.style.display = "none";
-          sessionStorage.setItem('userstatus', JSON.stringify(false));
-          loggedIn();
-        } else {
-          console.log('Incorrect username or password')
-        }
-      }
-    }
-  } else {
-    console.log('Must include username and password')
-  }
+document.querySelector('.log-in-button').addEventListener('click', () => {
+  document.querySelector('.log-in-modal-background').style.display = 'flex'
 })
 
-closeSignUpModal.onclick = function () {
-  signUpBackground.style.display = "none";
-}
-
-closeLogInModal.onclick = function () {
-  logInBackground.style.display = "none";
-  loginUsername.value = '';
-  loginPassword.value = '';
-}
-
-addBookBtn.onclick = function () {
-  modalBackground.style.display = "flex";
-}
-
-closeModal.onclick = function () {
-  title = document.querySelector('.title')
-  author = document.querySelector('.author')
-
-  title.style.border = 'none';
-  author.style.border = 'none';
-  title.value = '';
-  author.value = '';
-  modalBackground.style.display = 'none';
-}
-
-submitBookBtn.addEventListener('click', (e) => {
-  e.preventDefault();
-  title = document.querySelector('.title');
-  author = document.querySelector('.author');
-  readStatus = false;
-  favoriteStatus = false;
-
-  if (title.value === '' && author.value === '') {
-    title.style.border = '2px solid red';
-    author.style.border = '2px solid red';
-  } else if (title.value === '') {
-    author.style.border = 'none';
-    title.style.border = '2px solid red';
-  } else if (author.value === '') {
-    title.style.border = 'none';
-    author.style.border = '2px solid red';
-  } else if (library.some(book => book.title === title.value) === true) {
-    alert('This book already exists in your library')
-    title.style.border = 'none';
-    author.style.border = 'none'
-    title.value = '';
-    author.value = '';
-  } else {
-    updateBooks(title.value, author.value, readStatus, favoriteStatus);
-    title.style.border = 'none';
-    author.style.border = 'none'
-    title.value = '';
-    author.value = '';
-    modalBackground.style.display = 'none';
-  }
+document.querySelector('.close-sign-up-modal-btn').addEventListener('click', () => {
+  document.querySelector('.sign-up-modal-background').style.display = 'none'
 })
 
-function createBookCard(title, author, imgsrc, readStatus) {
-  const cardContainer = document.querySelector('.card-container');
-  const authCardContainer = document.querySelector('.authorized-card-container');
-  const bookCard = document.createElement('div');
-  bookCard.className = 'card-div';
-
-  if (userLoggedIn) {
-    authCardContainer.appendChild(bookCard);
-  } else {
-    cardContainer.appendChild(bookCard);
-  }
-
-  const cardCoverContainer = document.createElement('div');
-  cardCoverContainer.className = 'card-cover-container';
-  bookCard.appendChild(cardCoverContainer);
-  bookCover = document.createElement('img');
-  bookCover.className = 'book-cover-img';
-  bookCover.src = imgsrc;
-  cardCoverContainer.appendChild(bookCover);
-
-  const cardInfoContainer = document.createElement('div');
-  cardInfoContainer.className = 'card-info-container';
-  bookCard.appendChild(cardInfoContainer);
-
-  const bookTitle = document.createElement('h2');
-  bookTitle.className = 'book-title';
-  bookTitle.textContent = title;
-  cardInfoContainer.appendChild(bookTitle);
-
-  const bookAuthor = document.createElement('p');
-  bookAuthor.className = 'book-author';
-  bookAuthor.textContent = `By ${author}`;
-  cardInfoContainer.appendChild(bookAuthor);
-
-  const cardButtonContainer = document.createElement('div');
-  cardButtonContainer.className = 'card-btn-container';
-  bookCard.appendChild(cardButtonContainer);
-
-  const readStatusButton = document.createElement('button');
-  readStatusButton.id = 'read-status';
-  if (readStatus === false) {
-    readStatusButton.className = 'unread';
-    readStatusButton.textContent = 'Unread';
-  }
-  if (readStatus === true) {
-    readStatusButton.className = 'read';
-    readStatusButton.textContent = 'Read';
-  }
-  cardButtonContainer.appendChild(readStatusButton);
-
-  const editButton = document.createElement('button');
-  editButton.className = 'edit-btn';
-  editButton.textContent = 'Edit';
-  cardButtonContainer.appendChild(editButton);
-
-  const removeButton = document.createElement('button');
-  removeButton.className = 'remove-btn';
-  removeButton.textContent = 'Remove';
-  cardButtonContainer.appendChild(removeButton);
-}
-
-document.addEventListener('click', e => {
-  if (e.target.matches('.unread') || (e.target.matches('.read'))) {
-    bookTitle = e.target.parentElement.parentElement.querySelector('.book-title').textContent;
-    library.map(book => {
-      if (book.title === bookTitle) {
-        let bookId = book._id;
-        if (e.target.className === 'unread') {
-          e.target.className = 'read';
-          e.target.innerText = 'Read';
-        } else if (e.target.className === 'read') {
-          e.target.className = 'unread';
-          e.target.innerText = 'Unread';
-        }
-        book.readStatus = !book.readStatus;
-
-        let newBook = {
-          title: book.title,
-          author: book.author,
-          readStatus: book.readStatus,
-          favoriteStatus: false
-        }
-
-        const options = {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(book),
-        }
-
-        fetch(`http://localhost:8080/api/library/${bookId}`, options)
-        // localStorage.setItem('books', JSON.stringify(library));
-      }
-    })
-  }
+document.querySelector('.close-log-in-modal-btn').addEventListener('click', () => {
+  document.querySelector('.log-in-modal-background').style.display = 'none'
 })
 
-document.addEventListener('click', e => {
-  if (e.target.matches('.edit-btn')) {
-    let bookId;
-    let bookTitle = e.target.parentElement.parentElement.querySelector('.book-title');
-    let bookAuthor = e.target.parentElement.parentElement.querySelector('.book-author');
-    let bookCoverImg = e.target.parentElement.parentElement.querySelector('.book-cover-img');
-    let editModalBackground = document.querySelector('.edit-modal-background');
-    let editCloseBtn = document.querySelector('.close-edit-modal-btn');
-    let editSubmitBtn = document.querySelector('.edit-submit-book-btn');
-    let editForm = document.querySelector('.edit-modal-form');
-    let editTitle = document.querySelector('.edit-title');
-    let editAuthor = document.querySelector('.edit-author');
-
-    editModalBackground.style.display = 'flex';
-
-    editTitle.value = bookTitle.innerText;
-    editAuthor.value = bookAuthor.innerText.replace(/By /g, '');
-
-    const getBookId = () => {
-      library.filter(book => {
-        if (book.title === bookTitle.innerText) {
-          bookId = book._id
-        } 
-      })
-    }
-
-    getBookId()
-
-    editCloseBtn.addEventListener('click', () => {
-      editModalBackground.style.display = 'none';
-      editTitle.style.border = 'none';
-      editAuthor.style.border = 'none';
-    })
-
-    editSubmitBtn.addEventListener('click', e => {
-      e.preventDefault();
-
-      if (editTitle.value === '' && editAuthor.value === '') {
-        editTitle.style.border = '2px solid red';
-        editAuthor.style.border = '2px solid red';
-      } else if (editTitle.value === '') {
-        editAuthor.style.border = 'none';
-        editTitle.style.border = '2px solid red';
-      } else if (editAuthor.value === '') {
-        editTitle.style.border = 'none';
-        editAuthor.style.border = '2px solid red';
-      } else if (library.some(book => book.title === editTitle.value) === true) {
-        alert('This book already exists in your library');
-        editTitle.style.border = 'none';
-        editAuthor.style.border = 'none'
-        editTitle.value = '';
-        editAuthor.value = '';
-      } else {
-        for (let i = 0; i < library.length; i++) {
-          if (library[i].title === bookTitle.innerText) {
-            imgsrcFinder(editTitle.value);
-            editModalBackground.style.display = 'none';
-            editTitle.style.border = 'none';
-            editAuthor.style.border = 'none';
-
-            async function imgsrcFinder(title) {
-              const res = await fetch(`http://openlibrary.org/search.json?q=${title.replace(/ /g, '+')}`);
-              const data = await res.json();
-              imgsrc = await `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`;
-
-              library[i].title = editTitle.value;
-              library[i].author = editAuthor.value;
-              library[i].imgsrc = imgsrc;
-
-              bookTitle.innerText = editTitle.value;
-              bookAuthor.innerText = `By ${editAuthor.value}`;
-              bookCoverImg.src = imgsrc;
-
-              const book = {
-                title: editTitle.value,
-                author: editAuthor.value,
-                imgsrc: imgsrc,
-                readStatus: false,
-                favoriteStatus: false
-              }
-
-              const options = {
-                method: "PUT",
-                headers: {
-                  "Content-Type": "application/json"
-                },
-                body: JSON.stringify(book),
-              }
-
-              fetch(`http://localhost:8080/api/library/${bookId}`, options)
-              
-              // localStorage.setItem('books', JSON.stringify(library));
-            }
-          }
-        }
-      }
-    })
-  }
+document.querySelector('.submit-book-button').addEventListener('click', async (e) => {
+  e.preventDefault()
+  document.querySelector('.add-book-modal-background').style.display = 'none'
+  document.querySelector('.loader').style.display = 'flex'
+  let title = document.querySelector('.title').value
+  let author = document.querySelector('.author').value
+  const cover = await fetchBookCover(title)
+  let book = { title, author, cover }
+  submitBook(book)
+  renderBookCard(book)
+  document.querySelector('.title').value = ''
+  document.querySelector('.author').value = ''
+  document.querySelector('.loader').style.display = 'none'
 })
 
-document.addEventListener('click', e => {
-  if (e.target.matches('.remove-btn')) {
-
-    const title = e.target.parentElement.parentElement.querySelector('.book-title').textContent;
-    library.filter(book => {
-      if (book.title === title) {
-        const options = {
-          method: "DELETE",
-        }
-      
-        fetch(`http://localhost:8080/api/library/${book._id}`, options)
-        .then(res => res.json())
-        .then(data => console.log(data))
-        .then(window.location.reload())
-      }
-    })
-
-    // const options = {
-    //   method: "DELETE",
-    //   headers: {
-    //     "Content-Type": "application/json"
-    //   },
-    //   body: JSON.stringify(title),
-    // }
-  
-    // fetch('http://localhost:8080/api/library', options)
-    // .then(res => res.json())
-    // .then(data => console.log(data))
-    // .then(req => req.json())
-    // .then(data => console.log(data))
-    // for (let i = 0; i < library.length; i++) {
-    //   const bookCheck = library[i];
-
-    //   if (bookCheck.title === title) {
-    //     library.splice(i, 1);
-    //     e.target.parentElement.parentElement.remove();
-    //     localStorage.setItem('books', JSON.stringify(library));
-    //   }
-    // }
-  }
-})
-
-async function updateBooks(title, author, readStatus) {
+const fetchBookCover = async (title) => {
   const res = await fetch(`http://openlibrary.org/search.json?q=${title.replace(/ /g, '+')}`);
   const data = await res.json();
-  imgsrc = await `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`;
-  newBook(title, author, imgsrc, readStatus, favoriteStatus);
-  createBookCard(title, author, imgsrc, readStatus);
+  if (data.docs[0].cover_i === undefined) {
+    return 'https://clipart-library.com/images_k/cross-out-sign-transparent/cross-out-sign-transparent-10.png'
+  } else {
+    return `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`;
+  }
 }
 
-window.addEventListener('load', async () => {
-  await fetch('http://localhost:8080/api/library')
-  .then(res => res.json())
-  .then(library => library.forEach(book => createBookCard(book.title, book.author, book.imgsrc, book.readStatus)))
+const submitBook = async (book) => {
+  book.readStatus = false
+  book.favoriteStatus = false
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(book)
+  }
+  const res = fetch('http://localhost:8080/api/library', options)
+}
+
+const editBook = async (book) => {
+  const options = {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(book)
+  }
+  const res = await fetch(`http://localhost:8080/api/library/${book._id}`, options)
+}
+
+const removeBook = async (book) => {
+  const options = {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(book)
+  }
+  const res = await fetch(`http://localhost:8080/api/library/${book._id}`, options)
+}
+
+const fetchBooks = async () => {
+  const res = await fetch('http://localhost:8080/api/library')
+  const data = await res.json()
+  return data
+}
+
+const renderBookCard = (book) => {
+  const cardContainer = document.querySelector('.card-container')
+  const bookCard = document.createElement('div')
+  const cardCoverContainer = document.createElement('div')
+  const coverImage = document.createElement('img')
+  const cardInfoContainer = document.createElement('div')
+  const bookTitle = document.createElement('h2')
+  const bookAuthor = document.createElement('p')
+  const cardButtonContainer = document.createElement('div')
+  const readStatusButton = document.createElement('button')
+  const editButton = document.createElement('button')
+  const removeButton = document.createElement('button')
+
+  if (book.readStatus === true) {
+    readStatusButton.className = 'read'
+    readStatusButton.innerText = 'Read'
+  } else if (book.readStatus === false) {
+    readStatusButton.className = 'unread'
+    readStatusButton.innerText = 'Unread'
+  }
+
+  bookCard.className = 'card-div'
+  cardCoverContainer.className = 'card-cover-container'
+  coverImage.className = 'book-cover-img'
+  cardInfoContainer.className = 'card-info-container'
+  cardButtonContainer.className = 'card-btn-container'
+  bookTitle.className = 'book-title'
+  bookAuthor.className = 'book-author'
+  editButton.className = 'edit-btn'
+  removeButton.className = 'remove-btn'
+
+  coverImage.src = `${book.cover}`
+  bookTitle.innerText = `${book.title}`
+  bookAuthor.innerText = `${book.author}`
+
+  editButton.innerText = 'Edit'
+  removeButton.innerText = 'Remove'
+
+  cardContainer.appendChild(bookCard)
+  bookCard.appendChild(cardCoverContainer)
+  cardCoverContainer.appendChild(coverImage)
+  bookCard.appendChild(cardInfoContainer)
+  cardInfoContainer.appendChild(bookTitle)
+  cardInfoContainer.appendChild(bookAuthor)
+  bookCard.appendChild(cardButtonContainer)
+  cardButtonContainer.appendChild(readStatusButton)
+  cardButtonContainer.appendChild(editButton)
+  cardButtonContainer.appendChild(removeButton)
+}
+
+document.addEventListener('click', async (e) => {
+  if (e.target.matches('.unread')) {
+    let title = e.target.parentElement.parentElement.querySelector('.book-title').innerText
+    e.target.className = 'read'
+    e.target.innerText = 'Read'
+    let book = await fetchBooks().then(books => books.filter(book => book.title === title))
+    book[0].readStatus = true
+    editBook(book[0])
+  } else if (e.target.matches('.read')) {
+    let title = e.target.parentElement.parentElement.querySelector('.book-title').innerText
+    e.target.className = 'unread'
+    e.target.innerText = 'Unread'
+    let book = await fetchBooks().then(books => books.filter(book => book.title === title))
+    book[0].readStatus = false
+    editBook(book[0])
+  }
 })
+
+document.addEventListener('click', (e) => {
+  if (e.target.matches('.edit-btn')) {
+    let title = e.target.parentElement.parentElement.querySelector('.book-title').innerText
+    let author = e.target.parentElement.parentElement.querySelector('.book-author').innerText
+    let cover = e.target.parentElement.parentElement.querySelector('img')
+    document.querySelector('.edit-modal-background').style.display = 'flex'
+    document.querySelector('.edit-title').value = title
+    document.querySelector('.edit-author').value = author
+    document.querySelector('.close-edit-modal-btn').addEventListener('click', () => {
+      document.querySelector('.edit-modal-background').style.display = 'none'
+    })
+
+    document.querySelector('.edit-submit-book-btn').addEventListener('click', async (e) => {
+      e.preventDefault()
+      document.querySelector('.loader').style.display = 'flex'
+      document.querySelector('.edit-modal-background').style.display = 'none'
+      let book = await fetchBooks().then(books => books.filter(book => book.title === title))
+      newBook = {
+        _id: await book[0]._id,
+        title: document.querySelector('.edit-title').value,
+        author: document.querySelector('.edit-author').value,
+        cover: await fetchBookCover(document.querySelector('.edit-title').value),
+        readStatus: book[0].readStatus,
+        favoriteStatus: book[0].favoriteStatus
+      }
+      editBook(newBook)
+      window.location.reload()
+      document.querySelector('.loader').style.display = 'none'
+    })
+  }
+})
+
+document.addEventListener('click', async (e) => {
+  if (e.target.matches('.remove-btn')) {
+    let title = e.target.parentElement.parentElement.querySelector('.book-title').innerText
+    let book = await fetchBooks().then(books => books.filter(book => book.title === title))
+    removeBook(book[0])
+    e.target.parentElement.parentElement.remove()
+  }
+})
+
+document.querySelector('.sign-up-form-btn').addEventListener('click', (e) => {
+  e.preventDefault()
+  // console.log('sign up fired')
+})
+
+document.querySelector('.log-in-form-btn').addEventListener('click', (e) => {
+  e.preventDefault()
+  // console.log('log in fired')
+})
+
+fetchBooks().then(books => books.map(book => renderBookCard(book)))

@@ -23,7 +23,7 @@ const bookSchema = new mongoose.Schema({
     author: {
       type: String
     },
-    imgsrc: {
+    cover: {
         type: String
     },
     readStatus: {
@@ -73,9 +73,10 @@ app.get('/api/library', async (req, res) => {
 })
 
 app.post('/api/library', (req, res) => {
-    const { title, author, imgsrc, readStatus, favoriteStatus } = req.body
-    const book = new Book({ title, author, imgsrc, readStatus, favoriteStatus });
+    const { title, author, cover, readStatus, favoriteStatus } = req.body
+    const book = new Book({ title, author, cover, readStatus, favoriteStatus });
     book.save();
+    res.send(book._id);
     res.end();
 })
 
