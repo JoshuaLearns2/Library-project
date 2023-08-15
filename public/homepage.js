@@ -1,4 +1,4 @@
-document.querySelector('.add-book-button').addEventListener('click', () => {
+document.querySelector('.add-book-button').addEventListener('click', async () => {
   document.querySelector('.add-book-modal-background').style.display = 'flex'
 })
 
@@ -6,58 +6,45 @@ document.querySelector('.close-modal-button').addEventListener('click', () => {
   document.querySelector('.add-book-modal-background').style.display = 'none'
 })
 
-document.querySelector('.sign-up-button').addEventListener('click', () => {
-  document.querySelector('.sign-up-modal-background').style.display = 'flex'
+document.querySelector('.profile-button').addEventListener('click', async () => {
+  // const options = {
+  //   method: "POST",
+  //     headers: {
+  //         "Content-Type": "application/json"
+  //     },
+  //     body: JSON.stringify(user)
+  //   }
+  const res = await fetch('http://localhost:8080/api/cookiejar')
+  const data = await res.json()
+  console.log(data)
 })
 
-document.querySelector('.log-in-button').addEventListener('click', () => {
-  document.querySelector('.log-in-modal-background').style.display = 'flex'
-})
-
-document.querySelector('.close-sign-up-modal-btn').addEventListener('click', (e) => {
-  document.querySelector('.sign-up-modal-background').style.display = 'none'
-  document.querySelector('#sign-up-username').style.border = 'none'
-  document.querySelector('#sign-up-email').style.border = 'none'
-  document.querySelector('#sign-up-password').style.border = 'none'
-  document.querySelector('#sign-up-confirm-password').style.border = 'none'
-  document.querySelector('.sign-up-error-message').innerText = ''
-  document.querySelector('.sign-up-modal-form').reset()
-})
-
-document.querySelector('.close-log-in-modal-btn').addEventListener('click', () => {
-  document.querySelector('.log-in-modal-background').style.display = 'none'
-  document.querySelector('#log-in-username').style.border = 'none'
-  document.querySelector('#log-in-password').style.border = 'none'
-  document.querySelector('.log-in-error-message').innerText = ''
-  document.querySelector('.log-in-modal-form').reset()
+document.querySelector('.log-out-button').addEventListener('click', () => {
+  localStorage.removeItem('token')
+  window.location.href = 'index.html'
 })
 
 document.querySelector('.submit-book-button').addEventListener('click', async (e) => {
   e.preventDefault()
-  const booklist = await fetchBooks()
-  if (await booklist.length >= 8) {
-    return console.log('Please sign in to add more books')
-  } else if (await booklist.length < 9) {
-    document.querySelector('.add-book-modal-background').style.display = 'none'
-    document.querySelector('.loader').style.display = 'flex'
-    let title = document.querySelector('.title').value
-    let author = document.querySelector('.author').value
-    const cover = await fetchBookCover(title)
-    let book = { title, author, cover }
-    submitBook(book)
-    renderBookCard(book)
-    document.querySelector('.title').value = ''
-    document.querySelector('.author').value = ''
-    document.querySelector('.loader').style.display = 'none'
-  }
+  document.querySelector('.add-book-modal-background').style.display = 'none'
+  document.querySelector('.loader').style.display = 'flex'
+  let title = document.querySelector('.title').value
+  let author = document.querySelector('.author').value
+  const cover = await fetchBookCover(title)
+  let book = { title, author, cover }
+  submitBook(book)
+  renderBookCard(book)
+  document.querySelector('.title').value = ''
+  document.querySelector('.author').value = ''
+  document.querySelector('.loader').style.display = 'none'
 })
 
-const renderWelcomeMessage = () => {
+const renderWelcomeMessage = (message) => {
   const welcomeContainer = document.querySelector('.welcome-container')
   const welcomeMessage = document.createElement('h1')
 
   welcomeContainer.className = 'welcome-container'
-  welcomeMessage.innerHTML = '<h1>Welcome to Library!</h1><br/>Add your first book to get started'
+  welcomeMessage.innerHTML = '<h1>Your library is empty!</h1><br/>Add a book to get started'
   welcomeContainer.appendChild(welcomeMessage)
 }
 
@@ -82,7 +69,6 @@ const submitBook = async (book) => {
     body: JSON.stringify(book)
   }
   const res = fetch('http://localhost:8080/api/library', options)
-  window.location.reload()
 }
 
 const editBook = async (book) => {
@@ -382,21 +368,14 @@ document.querySelector('.log-in-form-btn').addEventListener('click', async (e) =
     document.querySelector('#log-in-password').style.border = 'none'
     errorMessage.innerText = ''
     renderLogInSuccessModal(data.message)
-    if (data.accessToken) {
-      localStorage.setItem('token', data.accessToken)
-      setTimeout(() => window.location.href = 'homepage.html', 2000)
-    }
+    if (data.success) {setTimeout(() => window.location.href = 'homepage.html', 2000)}
     setTimeout(() => {
       document.querySelector('.modal-background').style.display = 'none'
     }, 2000)
 }
 })
-
-fetchBooks().then(books => {
-  if (books.length === 0) {
-    return renderWelcomeMessage()
-  } else {
-    document.querySelector('.welcome-container').style.display = 'none'
-    return books.map(book => renderBookCard(book))
-  }
-})
+// fetch('http://localhost:8080/api/users/', (req, res) => {
+  
+// })
+renderWelcomeMessage()
+// fetchBooks().then(books => books.map(book => renderBookCard(book)))

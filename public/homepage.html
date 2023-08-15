@@ -7,7 +7,7 @@
   <title>Library</title>
   <link rel="icon" type="image/x-icon" href="/book-open-outline.png">
   <link rel="stylesheet" href="style.css" />
-  <script src="./script.js" defer></script>
+  <script src="./homepage.js" defer></script>
 </head>
 <body>
   <div class="modal-background"></div>
@@ -76,17 +76,23 @@
     </a>
     <nav class="nav-links">
       <ul>
-        <a class="sign-up-button">
-          <li>Sign Up</li>
+        <a class="profile-button">
+          <li>Profile</li>
         </a>
-        <a class="log-in-button">
-          <li>Log In</li>
+        <a class="log-out-button">
+          <li>Log Out</li>
         </a>
       </ul>
     </nav>
   </header>
   <main>
     <div class="button-container">
+      <select name="list-books" id="list">
+        <option value="">List All Books</option>
+        <option value="">List Favorites Only</option>
+        <option value="">Alphabetical by Author</option>
+        <option value="">Alphabetical by Title</option>
+      </select>
       <button class="add-book-button">Add a book</button>
     </div>
     <div class="card-container">
