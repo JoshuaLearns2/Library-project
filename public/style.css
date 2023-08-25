@@ -40,7 +40,8 @@ body {
 .sign-up-modal-background,
 .log-in-modal-background,
 .sign-up-success-modal-background,
-.log-in-success-modal-background {
+.log-in-success-modal-background,
+.profile-modal-background {
   display: none;
   justify-content: center;
   padding-top: 10%;
@@ -60,7 +61,8 @@ body {
 .sign-up-modal,
 .log-in-modal,
 .sign-up-success-modal,
-.log-in-success-modal {
+.log-in-success-modal,
+.profile-modal {
   display: flex;
   flex-direction: column;
   width: 300px;

@@ -81,7 +81,7 @@ const submitBook = async (book) => {
     },
     body: JSON.stringify(book)
   }
-  const res = fetch('http://localhost:8080/api/library', options)
+  const res = fetch('http://127.0.0.1:8080/api/library', options)
   window.location.reload()
 }
 
@@ -93,7 +93,7 @@ const editBook = async (book) => {
     },
     body: JSON.stringify(book)
   }
-  const res = await fetch(`http://localhost:8080/api/library/${book._id}`, options)
+  const res = await fetch(`http://127.0.0.1:8080/api/library/${book._id}`, options)
 }
 
 const removeBook = async (book) => {
@@ -104,11 +104,11 @@ const removeBook = async (book) => {
     },
     body: JSON.stringify(book)
   }
-  const res = await fetch(`http://localhost:8080/api/library/${book._id}`, options)
+  const res = await fetch(`http://127.0.0.1:8080/api/library/${book._id}`, options)
 }
 
 const fetchBooks = async () => {
-  const res = await fetch('http://localhost:8080/api/library')
+  const res = await fetch('http://127.0.0.1:8080/api/library')
   const data = await res.json()
   return data
 }
@@ -329,7 +329,7 @@ document.querySelector('.sign-up-form-btn').addEventListener('click', (e) => {
       }
       document.querySelector('.sign-up-modal-form').reset()
       document.querySelector('.sign-up-modal-background').style.display = 'none'
-      fetch('http://localhost:8080/api/users/signup', options)
+      fetch('http://127.0.0.1:8080/api/users/signup', options)
       renderSignUpSuccessModal()
       setTimeout(() => {
         document.querySelector('.modal-background').style.display = 'none'
@@ -370,22 +370,22 @@ document.querySelector('.log-in-form-btn').addEventListener('click', async (e) =
   } else {
     const options = {
       method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(user)
+      credentials: 'include',
+      withCredentials: true,
+      headers: {
+          "Content-Type": "application/json"
+      },
+      body: JSON.stringify(user)
       }
-    const res = await fetch('http://localhost:8080/api/users/login', options)
+    const res = await fetch('http://127.0.0.1:8080/login', options)
     const data = await res.json()
     document.querySelector('.log-in-modal-form').reset()
     document.querySelector('.log-in-modal-background').style.display = 'none'
     document.querySelector('#log-in-password').style.border = 'none'
     errorMessage.innerText = ''
     renderLogInSuccessModal(data.message)
-    if (data.accessToken) {
-      localStorage.setItem('token', data.accessToken)
-      setTimeout(() => window.location.href = 'homepage.html', 2000)
-    }
+    localStorage.setItem('token', data.accessToken)
+    setTimeout(() => window.location.href = `/user/${data.id}`, 2000)
     setTimeout(() => {
       document.querySelector('.modal-background').style.display = 'none'
     }, 2000)

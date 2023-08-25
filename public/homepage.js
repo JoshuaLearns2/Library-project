@@ -1,3 +1,13 @@
+const renderWelcomeMessage = () => {
+  const welcomeContainer = document.querySelector('.welcome-container')
+  const welcomeMessage = document.createElement('h1')
+
+  welcomeContainer.className = 'welcome-container'
+  welcomeMessage.innerHTML = '<h1>Your library is empty!</h1><br/>Add a book to get started'
+  // welcomeMessage.innerHTML = `Here is your information: ${message}`
+  welcomeContainer.appendChild(welcomeMessage)
+}
+
 document.querySelector('.add-book-button').addEventListener('click', async () => {
   document.querySelector('.add-book-modal-background').style.display = 'flex'
 })
@@ -7,21 +17,37 @@ document.querySelector('.close-modal-button').addEventListener('click', () => {
 })
 
 document.querySelector('.profile-button').addEventListener('click', async () => {
-  // const options = {
-  //   method: "POST",
-  //     headers: {
-  //         "Content-Type": "application/json"
-  //     },
-  //     body: JSON.stringify(user)
-  //   }
-  const res = await fetch('http://localhost:8080/api/cookiejar')
-  const data = await res.json()
-  console.log(data)
+  fetch('http://127.0.0.1:8080/api/userdata')
+  .then(res => res.json())
+  .then(data => {
+    const body = document.querySelector('body')
+    const profileModalBackground = document.createElement('div')
+    const profileModal = document.createElement('div')
+    const profileModalCloseButton = document.createElement('button')
+    profileModalBackground.className = 'profile-modal-background'
+    profileModal.className = 'profile-modal'
+    profileModalCloseButton.className = 'close-modal-button'
+    body.appendChild(profileModalBackground)
+    profileModalBackground.appendChild(profileModal)
+    profileModal.appendChild(profileModalCloseButton)
+    profileModalBackground.style.display = 'flex'
+
+    profileModalCloseButton.addEventListener('click', () => {
+      profileModalBackground.style.display = 'none'
+    })
+  })
 })
 
 document.querySelector('.log-out-button').addEventListener('click', () => {
-  localStorage.removeItem('token')
-  window.location.href = 'index.html'
+  const options = {
+    method: "PUT",
+    credentials: 'include',
+    withCredentials: true,
+    headers: {
+        "Content-Type": "application/json"
+    },
+  }
+  fetch('http://127.0.0.1:8080/logout', options).then(window.location.href = '/')
 })
 
 document.querySelector('.submit-book-button').addEventListener('click', async (e) => {
@@ -31,47 +57,40 @@ document.querySelector('.submit-book-button').addEventListener('click', async (e
   let title = document.querySelector('.title').value
   let author = document.querySelector('.author').value
   const cover = await fetchBookCover(title)
-  let book = { title, author, cover }
-  submitBook(book)
+  let book = { title, author, cover, readStatus: false, favoriteStatus: false }
+  await submitBook(book)
   renderBookCard(book)
   document.querySelector('.title').value = ''
   document.querySelector('.author').value = ''
   document.querySelector('.loader').style.display = 'none'
 })
 
-const renderWelcomeMessage = (message) => {
-  const welcomeContainer = document.querySelector('.welcome-container')
-  const welcomeMessage = document.createElement('h1')
-
-  welcomeContainer.className = 'welcome-container'
-  welcomeMessage.innerHTML = '<h1>Your library is empty!</h1><br/>Add a book to get started'
-  welcomeContainer.appendChild(welcomeMessage)
-}
-
-const fetchBookCover = async (title) => {
-  const res = await fetch(`http://openlibrary.org/search.json?q=${title.replace(/ /g, '+')}`);
-  const data = await res.json();
-  if (data.docs[0].cover_i === undefined) {
-    return 'https://clipart-library.com/images_k/cross-out-sign-transparent/cross-out-sign-transparent-10.png'
-  } else {
-    return `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`;
-  }
-}
-
-const submitBook = async (book) => {
-  book.readStatus = false
-  book.favoriteStatus = false
+const submitBook = (book) => {
+  const id = location.pathname.split('/')[2]
   const options = {
-    method: "POST",
+    method: "PUT",
+    credentials: 'include',
+    withCredentials: true,
     headers: {
-      "Content-Type": "application/json"
+        "Content-Type": "application/json"
     },
     body: JSON.stringify(book)
   }
-  const res = fetch('http://localhost:8080/api/library', options)
+  fetch(`http://127.0.0.1:8080/user/${id}/library`, options)
 }
 
-const editBook = async (book) => {
+const fetchBookCover = async (title) => {
+  const res = await fetch(`http://openlibrary.org/search.json?q=${title.replace(/ /g, '+')}`)
+  const data = await res.json()
+  if (data.docs[0].cover_i === undefined) {
+    return 'https://clipart-library.com/images_k/cross-out-sign-transparent/cross-out-sign-transparent-10.png'
+  } else {
+    return `https://covers.openlibrary.org/b/id/${data.docs[0].cover_i}-M.jpg`
+  }
+}
+
+const editUserBook = async (book) => {
+  const id = location.pathname.split('/')[2]
   const options = {
     method: "PUT",
     headers: {
@@ -79,24 +98,25 @@ const editBook = async (book) => {
     },
     body: JSON.stringify(book)
   }
-  const res = await fetch(`http://localhost:8080/api/library/${book._id}`, options)
+  const res = await fetch(`http://127.0.0.1:8080/user/${id}/library/book`, options)
 }
 
-const removeBook = async (book) => {
+const removeUserBook = async (book) => {
+  const id = location.pathname.split('/')[2]
   const options = {
-    method: "DELETE",
+    method: "PUT",
     headers: {
       "Content-Type": "application/json"
     },
     body: JSON.stringify(book)
   }
-  const res = await fetch(`http://localhost:8080/api/library/${book._id}`, options)
+  const res = await fetch(`http://127.0.0.1:8080/user/${id}/library/book/delete`, options)
 }
 
-const fetchBooks = async () => {
-  const res = await fetch('http://localhost:8080/api/library')
+const fetchUserBooks = async () => {
+  const res = await fetch('http://127.0.0.1:8080/api/userdata')
   const data = await res.json()
-  return data
+  return data[0].library
 }
 
 const renderBookCard = (book) => {
@@ -154,16 +174,16 @@ document.addEventListener('click', async (e) => {
     let title = e.target.parentElement.parentElement.querySelector('.book-title').innerText
     e.target.className = 'read'
     e.target.innerText = 'Read'
-    let book = await fetchBooks().then(books => books.filter(book => book.title === title))
+    let book = await fetchUserBooks().then(books => books.filter(book => book.title === title))
     book[0].readStatus = true
-    editBook(book[0])
+    editUserBook(book[0])
   } else if (e.target.matches('.read')) {
     let title = e.target.parentElement.parentElement.querySelector('.book-title').innerText
     e.target.className = 'unread'
     e.target.innerText = 'Unread'
-    let book = await fetchBooks().then(books => books.filter(book => book.title === title))
+    let book = await fetchUserBooks().then(books => books.filter(book => book.title === title))
     book[0].readStatus = false
-    editBook(book[0])
+    editUserBook(book[0])
   }
 })
 
@@ -183,7 +203,7 @@ document.addEventListener('click', (e) => {
       e.preventDefault()
       document.querySelector('.loader').style.display = 'flex'
       document.querySelector('.edit-modal-background').style.display = 'none'
-      let book = await fetchBooks().then(books => books.filter(book => book.title === title))
+      let book = await fetchUserBooks().then(books => books.filter(book => book.title === title))
       newBook = {
         _id: await book[0]._id,
         title: document.querySelector('.edit-title').value,
@@ -192,7 +212,7 @@ document.addEventListener('click', (e) => {
         readStatus: book[0].readStatus,
         favoriteStatus: book[0].favoriteStatus
       }
-      editBook(newBook)
+      editUserBook(newBook)
       window.location.reload()
       document.querySelector('.loader').style.display = 'none'
     })
@@ -202,180 +222,13 @@ document.addEventListener('click', (e) => {
 document.addEventListener('click', async (e) => {
   if (e.target.matches('.remove-btn')) {
     let title = e.target.parentElement.parentElement.querySelector('.book-title').innerText
-    let book = await fetchBooks().then(books => books.filter(book => book.title === title))
-    removeBook(book[0])
+    let book = await fetchUserBooks().then(books => books.filter(book => book.title === title))
+    removeUserBook(book[0])
     e.target.parentElement.parentElement.remove()
   }
 })
 
-const renderSignUpSuccessModal = () => {
-  const modalBackground = document.querySelector('.modal-background')
-  const signUpSuccessModal = document.createElement('div')
-  const signUpSuccessMessage = document.createElement('h2')
-
-  modalBackground.innerHTML = ''
-  signUpSuccessModal.className = 'sign-up-success-modal'
-  signUpSuccessMessage.className = 'sign-up-success-message'
-
-  modalBackground.style.display = 'flex'
-  signUpSuccessMessage.innerText = 'Thank you for signing up with Library! You will be redirected to a log in shortly'
-
-  modalBackground.appendChild(signUpSuccessModal)
-  signUpSuccessModal.appendChild(signUpSuccessMessage)
-}
-
-const renderLogInSuccessModal = (message) => {
-  const modalBackground = document.querySelector('.modal-background')
-  const logInSuccessModal = document.createElement('div')
-  const logInSuccessMessage = document.createElement('h2')
-
-  modalBackground.innerHTML = ''
-  logInSuccessModal.className = 'log-in-success-modal'
-  logInSuccessMessage.className = 'log-in-success-message'
-  modalBackground.style.display = 'flex'
-  logInSuccessMessage.innerText = `${message}`
-
-  modalBackground.appendChild(logInSuccessModal)
-  logInSuccessModal.appendChild(logInSuccessMessage)
-}
-
-document.querySelector('.sign-up-form-btn').addEventListener('click', (e) => {
-  e.preventDefault()
-  let username = document.querySelector('#sign-up-username').value;
-  let email = document.querySelector('#sign-up-email').value;
-  let password = document.querySelector('#sign-up-password').value;
-  let confirmPassword = document.querySelector('#sign-up-confirm-password').value;
-  let user = { username, email, password };
-  
-  let errorMessage = document.createElement('div')
-  errorMessage.className = 'sign-up-error-message'
-
-  document.querySelector('.sign-up-modal-form').addEventListener('keydown', () => {
-    document.querySelector('#sign-up-username').style.border = 'none'
-    document.querySelector('#sign-up-email').style.border = 'none'
-    document.querySelector('#sign-up-password').style.border = 'none'
-    document.querySelector('#sign-up-confirm-password').style.border = 'none'
-    errorMessage.innerText = ''
-  })
-
-  if (!username) {
-    document.querySelector('#sign-up-username').style.border = 'solid red 1px'
-    errorMessage.innerText = 'You must include a username'
-    document.querySelector('.sign-up-modal-form').insertBefore(errorMessage, document.querySelector('#sign-up-username'))
-    return;
-  } else {
-    document.querySelector('#sign-up-username').style.border = 'none'
-    errorMessage.innerText = ''
-  }
-  if (!email) {
-    document.querySelector('#sign-up-email').style.border = 'solid red 1px'
-    errorMessage.innerText = 'You must include an email'
-    document.querySelector('.sign-up-modal-form').insertBefore(errorMessage, document.querySelector('#sign-up-email'))
-    return;
-  } else {
-    document.querySelector('#sign-up-email').style.border = 'none'
-    errorMessage.innerText = ''
-  }
-  if (!password) {
-    document.querySelector('#sign-up-password').style.border = 'solid red 1px'
-    errorMessage.innerText = 'You must include a password'
-    document.querySelector('.sign-up-modal-form').insertBefore(errorMessage, document.querySelector('#sign-up-password'))
-    return;
-  } else {
-    document.querySelector('#sign-up-password').style.border = 'none'
-    errorMessage.innerText = ''
-  }
-  if (!confirmPassword) {
-    document.querySelector('#sign-up-confirm-password').style.border = 'solid red 1px'
-    errorMessage.innerText = 'You must include a password'
-    document.querySelector('.sign-up-modal-form').insertBefore(errorMessage, document.querySelector('#sign-up-confirm-password'))
-    return;
-  } else {
-    document.querySelector('#sign-up-confirm-password').style.border = 'none'
-    errorMessage.innerText = ''
-  }
-  if (password != confirmPassword) {
-    document.querySelector('#sign-up-password').style.border = 'solid red 1px'
-    document.querySelector('#sign-up-confirm-password').style.border = 'solid red 1px'
-    errorMessage.innerText = 'Passwords do not match'
-    document.querySelector('.sign-up-modal-form').insertBefore(errorMessage, document.querySelector('#sign-up-password'))
-    return;
-  } else if (password.length < 6) {
-    document.querySelector('#sign-up-password').style.border = 'solid red 1px'
-    errorMessage.innerText = 'Password must be 6 characters or more'
-    document.querySelector('.sign-up-modal-form').insertBefore(errorMessage, document.querySelector('#sign-up-password'))
-    return;
-  } else {
-      const options = {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json"
-          },
-          body: JSON.stringify(user)
-      }
-      document.querySelector('.sign-up-modal-form').reset()
-      document.querySelector('.sign-up-modal-background').style.display = 'none'
-      fetch('http://localhost:8080/api/users/signup', options)
-      renderSignUpSuccessModal()
-      setTimeout(() => {
-        document.querySelector('.modal-background').style.display = 'none'
-        document.querySelector('.log-in-modal-background').style.display = 'flex'
-      }, 2000)
-  }
+fetchUserBooks()
+.then(library => {
+  library.map(book => renderBookCard(book))
 })
-
-document.querySelector('.log-in-form-btn').addEventListener('click', async (e) => {
-  e.preventDefault()
-  let username = document.querySelector('#log-in-username').value
-  let password = document.querySelector('#log-in-password').value
-  let user = { username, password }
-
-  let errorMessage = document.createElement('div')
-  errorMessage.className = 'log-in-error-message'
-
-  document.querySelector('.log-in-modal-form').addEventListener('keydown', () => {
-    document.querySelector('#log-in-username').style.border = 'none'
-    document.querySelector('#log-in-password').style.border = 'none'
-    errorMessage.innerText = ''
-  })
-
-  if (!username) {
-    document.querySelector('#log-in-username').style.border = 'solid red 1px'
-    errorMessage.innerText = 'You must include a username'
-    document.querySelector('.log-in-modal-form').insertBefore(errorMessage, document.querySelector('#log-in-username'))
-    return;
-  } else {
-    document.querySelector('#log-in-username').style.border = 'none'
-    errorMessage.innerText = ''
-  }
-  if (!password) {
-    document.querySelector('#log-in-password').style.border = 'solid red 1px'
-    errorMessage.innerText = 'You must include a password'
-    document.querySelector('.log-in-modal-form').insertBefore(errorMessage, document.querySelector('#log-in-password'))
-    return;
-  } else {
-    const options = {
-      method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify(user)
-      }
-    const res = await fetch('http://localhost:8080/api/users/login', options)
-    const data = await res.json()
-    document.querySelector('.log-in-modal-form').reset()
-    document.querySelector('.log-in-modal-background').style.display = 'none'
-    document.querySelector('#log-in-password').style.border = 'none'
-    errorMessage.innerText = ''
-    renderLogInSuccessModal(data.message)
-    if (data.success) {setTimeout(() => window.location.href = 'homepage.html', 2000)}
-    setTimeout(() => {
-      document.querySelector('.modal-background').style.display = 'none'
-    }, 2000)
-}
-})
-// fetch('http://localhost:8080/api/users/', (req, res) => {
-  
-// })
-renderWelcomeMessage()
-// fetchBooks().then(books => books.map(book => renderBookCard(book)))

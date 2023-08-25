@@ -8,8 +8,14 @@ const cookieParser = require('cookie-parser')
 require('dotenv').config()
 
 const app = express();
+app.set('view engine', 'ejs')
+const corsOptions = {
+    origin: 'http://127.0.0.1:5501',
+    credentials: true
+}
 
-app.use(cors());
+app.use(express.static(path.join(__dirname, 'public')))
+app.use(cors(corsOptions))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
@@ -51,23 +57,115 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    library: {
-        type: String
-    },
+    library: [{
+        title: {
+            type: String,
+          },
+          author: {
+            type: String
+          },
+          cover: {
+              type: String
+          },
+          readStatus: {
+              type: Boolean
+          },
+          favoriteStatus: {
+              type: Boolean
+          }
+    }],
     role: {
         type: String,
         required: true
     }
 });
 
-let tokenDB = []
-  
 const Book = mongoose.model("Book", bookSchema);
 const User = mongoose.model("User", userSchema);
+
+app.get('/', (req, res) => {
+    res.render('index')
+})
+
+app.get('/user/:id', (req, res) => {
+    const token = req.cookies.jwt
+    if (token === undefined) return res.status(403).redirect('/')
+    res.render('home')
+})
 
 app.get('/api/library', async (req, res) => {
     const library = await Book.find();
     return res.json(library);
+})
+
+app.get('/userlibrary', (req, res) => {
+    const token = req.cookies.jwt
+    jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, async (err, user) => {
+        if (err) return res.send(err)
+        const currentUser = await User.find({ username: user.username })
+        // const library = currentUser[0]._docs.library
+        res.send({ data: currentUser[0].library })
+    })
+})
+
+app.get('/api/userdata', (req, res) => {
+    const token = req.cookies.jwt
+    jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, async (err, user) => {
+        if (err) return res.send(err)
+        const currentUser = await User.find({ username: user.username })
+        res.send(currentUser)
+    })
+})
+
+app.get('/user/:id/library', async (req, res) => {
+    const { id } = req.params
+    const { title, author, cover } = req.body
+    let readStatus = false
+    let favoriteStatus = false
+    let user = await User.findById({_id: id})
+    let book = { title, author, cover, readStatus, favoriteStatus }
+    user.library.push(book)
+    await user.save()
+    res.send({message: 'successfully updated'})
+})
+
+app.put('/logout', (req, res) => {
+    res.clearCookie('jwt').status(200).end()
+})
+
+app.put('/user/:id/library', async (req, res) => {
+    const { id } = req.params
+    const { title, author, cover } = req.body
+    let readStatus = false
+    let favoriteStatus = false
+    let user = await User.findById({_id: id})
+    let book = { title, author, cover, readStatus, favoriteStatus }
+    user.library.push(book)
+    await user.save()
+    res.end()
+})
+
+app.put('/user/:id/library/book', async (req, res) => {
+    const { id } = req.params
+    const { _id, title, author, cover, readStatus, favoriteStatus } = req.body
+    const user = await User.findById({_id: id})
+    const book = user.library.id(_id)
+    book.title = title
+    book.author = author
+    book.cover = cover
+    book.readStatus = readStatus
+    book.favoriteStatus = favoriteStatus
+    await user.save()
+    res.end()
+})
+
+app.put('/user/:id/library/book/delete', async (req, res) => {
+    const { id } = req.params
+    const { _id, title, author, cover, readStatus, favoriteStatus } = req.body
+    const user = await User.findById({_id: id})
+    user.library.id(_id).deleteOne()
+    await user.save()
+    res.end()
 })
 
 app.post('/api/library', (req, res) => {
@@ -97,7 +195,7 @@ app.post('/api/users/signup', async (req, res) => {
     return res.send(user._id)
 });
 
-app.post('/api/users/login', async (req, res) => {
+app.post('/login', async (req, res) => {
     const { username, password } = req.body;
     const user = await User.find({ username: username })
     
@@ -108,65 +206,24 @@ app.post('/api/users/login', async (req, res) => {
         if (match) {
             const accessToken = jwt.sign({"username": user[0].username}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '300' })
             const refreshToken = jwt.sign({"username": user[0].username}, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' })
-            tokenDB.push(refreshToken)
-            // res.cookie('jwt', accessToken, { httpOnly: true,  maxAge: 24 * 60 * 60 * 1000 })
-            res.cookie('jwt', "hereisacookie")
-            res.send({ message: `Welcome back, ${username}`, accessToken: accessToken, refreshToken: refreshToken })
+            res.cookie('jwt', refreshToken, { httpOnly: true,  sameSite: 'none', secure: true, maxAge: 24 * 60 * 60 * 1000 })
+            res.send({ message: `Welcome back, ${username}`, accessToken: accessToken, id: user[0]._id})
         } else {
             res.send({ message: "Incorrect username and/or password" })
         }
     }
 })
 
-const verifyToken = (req, res, next) => {
-    const authHeader = req.header.authorization
-    if (authHeader) {
-        const token = authHeader.split(' ')[1]
-        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-            if (err) return res.status(403).json("Token is not valid")
-            req.user = user
-            next()
-        })
-    } else {
-        res.status(401).json("You are not authenticated")
-    }
-}
-
-app.delete('/api/users/:id', verifyToken, async (req, res) => {
-    const { id } = req.params
-    const user = await User.findById(id)
-    if (user) {
-        res.status(200).json("User has been deleted")
-    } else {
-        res.status(403).json("You do not have the proper authorization")
-    }
-})
-
 app.post('/api/refresh', async (req, res) => {
-    const refreshToken = req.body.token
-
+    const refreshToken = req.cookies.jwt
     if (!refreshToken) return res.status(401).json("You do not have the proper authorization")
-    if (!tokenDB.includes(refreshToken)) return res.status(403).json("Token is not valid")
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
         err && console.log(err)
-        tokenDB = tokenDB.filter(token => token !== refreshToken)
         const newAccessToken = jwt.sign({"username": user.username}, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '300' })
         const newRefreshToken = jwt.sign({"username": user.username}, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' })
-        tokenDB.push(newRefreshToken)
-        res.status(200).json({ accessToken: newAccessToken, refreshToken: newRefreshToken })
+        res.cookie('jwt', newRefreshToken, { httpOnly: true,  sameSite: 'none', secure: true, maxAge: 24 * 60 * 60 * 1000 })
+        res.status(200).json({ accessToken: newAccessToken })
     })
 })
-
-app.post('/api/logout', verifyToken, (req, res) => {
-    const refreshToken = req.body.token
-    tokenDB => tokenDB.filter(token => token !== refreshToken )
-    res.status(200).json("You logged out successfully")
-})
-
-app.get('/api/cookiejar', (req, res) => {
-    res.cookie('jwt', 'jsonwebtokengoeshere')
-    res.send({ message: "get your hand outta here"})
-})
-
 
 app.listen(8080, () => console.log('Server successfully started'))
