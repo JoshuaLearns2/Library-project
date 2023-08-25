@@ -14,6 +14,10 @@ body {
   position: relative;
 }
 
+.icon {
+  color: #ffffff;
+}
+
 .loader {
   color: #ffffff;
   font-size: 2em;
@@ -236,7 +240,7 @@ button:hover {
   justify-content: center;
   grid-template-columns: repeat(auto-fit, 300px);
   gap: 30px;
-  padding-bottom: 5rem;
+  padding-bottom: 10rem;
 }
 
 .card-div {
@@ -269,6 +273,39 @@ button:hover {
   display: flex;
   flex-direction: column;
   padding: 1em;
+}
+
+.favorite-status {
+  border: none;
+  background-color: transparent;
+  position: absolute; 
+  top: 10px;
+  right: 10px;
+}
+
+.search-button {
+  border: none;
+  background-color: transparent;
+  position: absolute;
+  fill: #334155; 
+  top: 50px;
+  right: 12px;
+}
+
+.favorite-status > svg {
+  pointer-events: none;
+}
+
+.search-button > svg {
+  pointer-events: none;
+}
+
+.favorited {
+  fill: rgb(255, 238, 57);
+}
+
+.unfavorited {
+  fill: rgb(227, 227, 227);
 }
 
 .card-btn-container {
