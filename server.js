@@ -103,7 +103,7 @@ app.get('/userlibrary', (req, res) => {
     jwt.verify(token, process.env.REFRESH_TOKEN_SECRET, async (err, user) => {
         if (err) return res.send(err)
         const currentUser = await User.find({ username: user.username })
-        // const library = currentUser[0]._docs.library
+        // const library = currentUser[0]._docs.library 
         res.send({ data: currentUser[0].library })
     })
 })
@@ -189,6 +189,10 @@ app.delete('/api/library/:id', async (req, res) => {
 
 app.post('/api/users/signup', async (req, res) => {
     const { username, email, password } = req.body;
+    const users = await User.find()
+    if (users.filter(user => user.username === username).length === 1) {
+        return res.send(true)
+    }
     const securePassword = await bcrypt.hash(password, 10);
     const user = new User({ username, email, securePassword, role: 'basic'});
     user.save()
@@ -224,6 +228,21 @@ app.post('/api/refresh', async (req, res) => {
         res.cookie('jwt', newRefreshToken, { httpOnly: true,  sameSite: 'none', secure: true, maxAge: 24 * 60 * 60 * 1000 })
         res.status(200).json({ accessToken: newAccessToken })
     })
+})
+
+app.put('/user/:id', async (req, res) => {
+    const { id } = req.params
+    const { username, email } = req.body
+    const user = await User.find({ username: username })
+    if (username === user.username) 
+    if (user.length === 1 && username !== user.username) {
+        return res.send({ message: 'That username already exists'})
+    }
+    const editedUser = await User.findById(id)
+    editedUser.username = username
+    editedUser.email = email
+    editedUser.save()
+    return res.send({ message: 'Profile successfully updated' })
 })
 
 app.listen(8080, () => console.log('Server successfully started'))

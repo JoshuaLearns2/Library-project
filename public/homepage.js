@@ -4,7 +4,6 @@ const renderWelcomeMessage = () => {
 
   welcomeContainer.className = 'welcome-container'
   welcomeMessage.innerHTML = '<h1>Your library is empty!</h1><br/>Add a book to get started'
-  // welcomeMessage.innerHTML = `Here is your information: ${message}`
   welcomeContainer.appendChild(welcomeMessage)
 }
 
@@ -16,24 +15,133 @@ document.querySelector('.close-modal-button').addEventListener('click', () => {
   document.querySelector('.add-book-modal-background').style.display = 'none'
 })
 
-document.querySelector('.profile-button').addEventListener('click', async () => {
+const renderMessageModal = (dynamicMessage) => {
+  const modalBackground = document.querySelector('.modal-background')
+  const messageModal = document.createElement('div')
+  const closeModalContainer = document.createElement('div')
+  const closeModalButton = document.createElement('button')
+  const modalMessageContainer = document.createElement('div')
+  const message = document.createElement('h2')
+
+  modalBackground.innerHTML = ''
+  messageModal.className = 'log-in-success-modal'
+  closeModalContainer.className = 'close-modal-container'
+  closeModalButton.className = 'close-modal-button'
+  modalMessageContainer.className = 'modal-message-container'
+  closeModalButton.innerHTML = '&times;'
+  message.className = 'log-in-success-message'
+  modalBackground.style.display = 'flex'
+  message.innerText = `${dynamicMessage}`
+
+  modalBackground.appendChild(messageModal)
+  messageModal.appendChild(closeModalContainer)
+  messageModal.appendChild(modalMessageContainer)
+  closeModalContainer.appendChild(closeModalButton)
+  modalMessageContainer.appendChild(message)
+
+  closeModalButton.addEventListener('click', () => {
+    modalBackground.style.display = 'none'
+  })
+}
+
+document.querySelector('.profile-button').addEventListener('click', async (e) => {
+  e.preventDefault()
   fetch('http://127.0.0.1:8080/api/userdata')
   .then(res => res.json())
   .then(data => {
     const body = document.querySelector('body')
     const profileModalBackground = document.createElement('div')
     const profileModal = document.createElement('div')
+    const profileModalCloseButtonContainer = document.createElement('div')
     const profileModalCloseButton = document.createElement('button')
+    const profileModalTitle = document.createElement('h3')
+    const profileForm = document.createElement('form')
+    const usernameInput = document.createElement('input')
+    const emailInput = document.createElement('input')
+    const profileUpdateButton = document.createElement('button')
+    const changePasswordLink = document.createElement('a')
+
     profileModalBackground.className = 'profile-modal-background'
     profileModal.className = 'profile-modal'
+    profileModalCloseButtonContainer.className = 'close-modal-container'
     profileModalCloseButton.className = 'close-modal-button'
+    profileModalTitle.className = 'modal-title'
+    profileForm.className = 'profile-modal-form'
+    usernameInput.className = 'profile-username'
+    emailInput.className = 'profile-email'
+    profileUpdateButton.className = 'profile-update-button'
+    changePasswordLink.className = 'change-password-link'
+
+    profileModalCloseButton.innerHTML = '&times;'
+    profileModalTitle.innerHTML = 'PROFILE'
+    usernameInput.value = data[0].username
+    emailInput.value = data[0].email
+    profileUpdateButton.innerHTML = 'Update Profile'
+    changePasswordLink.innerText = 'change password'
+
     body.appendChild(profileModalBackground)
     profileModalBackground.appendChild(profileModal)
-    profileModal.appendChild(profileModalCloseButton)
+    profileModal.appendChild(profileModalCloseButtonContainer)
+    profileModalCloseButtonContainer.appendChild(profileModalCloseButton)
+    profileModal.appendChild(profileForm)
+    profileForm.appendChild(profileModalTitle)
+    profileForm.appendChild(usernameInput)
+    profileForm.appendChild(emailInput)
+    profileForm.appendChild(profileUpdateButton)
+    profileForm.appendChild(changePasswordLink)
+
     profileModalBackground.style.display = 'flex'
 
     profileModalCloseButton.addEventListener('click', () => {
       profileModalBackground.style.display = 'none'
+    })
+
+    profileUpdateButton.addEventListener('click', (e) => {
+      e.preventDefault()
+      const id = location.pathname.split('/')[2]
+      const username = e.target.parentElement.querySelector('.profile-username').value
+      const email = e.target.parentElement.querySelector('.profile-email').value
+
+      const options = {
+        method: 'PUT',
+        credentials: 'include',
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, email })
+      }
+      fetch(`http://127.0.0.1:8080/user/${id}`, options)
+      .then(res => res.json())
+      .then(data => {
+        usernameInput.value = ''
+        emailInput.value = ''
+        profileModalBackground.style.display = 'none'
+        renderMessageModal(`${data.message}`)
+        setTimeout(() => {
+          document.querySelector('.modal-background').style.display = 'none'
+          
+          const options = {
+            method: "PUT",
+            credentials: 'include',
+            withCredentials: true,
+            headers: {
+                "Content-Type": "application/json"
+            },
+          }
+          fetch('http://127.0.0.1:8080/logout', options).then(window.location.href = '/')
+        }, 2000)
+      })
+    })
+    changePasswordLink.addEventListener('click', () => {
+      profileModalBackground.style.display = 'none'
+      document.querySelector('.change-password-modal-background').style.display = 'flex'
+      document.addEventListener('click', (e) => {
+        if (e.target.className === 'close-modal-button') {
+          document.querySelector('.change-password-form').reset()
+          document.querySelector('.change-password-modal-background').style.display = 'none'
+        }
+      })
     })
   })
 })

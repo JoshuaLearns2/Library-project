@@ -10,9 +10,9 @@ body {
   min-height: 100vh;
 }
 
-body {
+/* body {
   position: relative;
-}
+} */
 
 .icon {
   color: #ffffff;
@@ -45,7 +45,8 @@ body {
 .log-in-modal-background,
 .sign-up-success-modal-background,
 .log-in-success-modal-background,
-.profile-modal-background {
+.profile-modal-background,
+.change-password-modal-background {
   display: none;
   justify-content: center;
   padding-top: 10%;
@@ -66,7 +67,8 @@ body {
 .log-in-modal,
 .sign-up-success-modal,
 .log-in-success-modal,
-.profile-modal {
+.profile-modal,
+.change-password-modal {
   display: flex;
   flex-direction: column;
   width: 300px;
@@ -76,27 +78,26 @@ body {
   text-align: center;
 }
 
-.sign-up-success-modal,
-.log-in-success-modal {
+.modal-message-container {
   display: flex;
-  justify-content: center;
   align-items: center;
-  text-align: center;
-  padding: 3em;
   font-family: sans-serif;
-  font-size: .8em;
   color: #334155;
+  height: 100%;
+  padding: 0 2em 0 2em;
 }
 
 .modal-title {
-  color: #334155;
   font-family: sans-serif;
+  color: #334155;
 }
 
 .modal-form,
 .edit-modal-form,
 .sign-up-modal-form,
-.log-in-modal-form {
+.log-in-modal-form,
+.profile-modal-form,
+.change-password-form {
   display: flex;
   height: 80%;
   flex-direction: column;
@@ -125,7 +126,11 @@ body {
 .sign-up-modal-form>input,
 .sign-up-form-btn,
 .log-in-modal-form>input,
-.log-in-form-btn {
+.log-in-form-btn,
+.profile-modal-form>input,
+.profile-update-button,
+.change-password-form>input,
+.change-password-button {
   width: 50%;
   height: 30px;
   margin: .5rem;
@@ -134,7 +139,9 @@ body {
 .modal-form>input,
 .edit-modal-form>input,
 .sign-up-modal-form>input,
-.log-in-modal-form>input {
+.log-in-modal-form>input,
+.profile-modal-form>input,
+.change-password-form>input {
   padding-left: .5rem;
   border: none;
 }
@@ -142,10 +149,19 @@ body {
 .submit-book-button,
 .edit-submit-book-btn,
 .sign-up-form-btn,
-.log-in-form-btn {
+.log-in-form-btn,
+.profile-update-button,
+.change-password-button {
   background-color: #0ea5e9;
   color: #ffffff;
   border: none;
+}
+
+.change-password-link {
+  font-size: 0.8em;
+  cursor: pointer;
+  font-family: sans-serif;
+  color: #334155;
 }
 
 header {
